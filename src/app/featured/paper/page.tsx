@@ -1,6 +1,6 @@
 import React from "react";
 import { Poppins } from "next/font/google";
-import Paperpost from "@/components/paperpost";
+import Paperpost from "@/components/Paperpost";
 
 const poppins = Poppins({
   subsets: ["latin"],
