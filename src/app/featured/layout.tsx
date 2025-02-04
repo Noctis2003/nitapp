@@ -187,7 +187,7 @@ export default function RootLayout({
       </aside>
 
       <div className="p-4 sm:ml-64">
-        <div className="p-4 border-2  rounded-lg dark:border-gray-700 h-screen">
+        <div className="p-4   rounded-lg dark:border-gray-700 h-screen">
           {children}
         </div>
       </div>
