@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+
 import { InfiniteMovingCards } from "@/components/ui/infinite-moving-cards";
 import { Poppins } from "next/font/google";
 
