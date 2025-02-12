@@ -4,32 +4,32 @@ import Paperpost from "@/components/Paperpost";
 
 const poppins = Poppins({
   subsets: ["latin"],
-  weight: ["400", "500", "700"], // Add the desired weights
+  weight: ["400", "500", "700"],
 });
 
-function page() {
+function Page() {
   return (
-    <div className={`w-full  h-screen flex flex-col ${poppins.className} `}>
-      <h1 className="w-full  text-center text-5xl font-extrabold mt-4">
-        Daily feed
+    <div className={`w-full  flex flex-col flex-grow ${poppins.className} bg-gray-950 text-white`}>
+      <h1 className="w-full text-center text-5xl font-extrabold mt-4">
+        Daily Feed
       </h1>
       <div
-        className="p-4 text-center text-sm mt-3 text-gray-900 rounded-lg bg-gray-50 dark:bg-gray-800 dark:text-gray-300"
+        className="p-4 text-center text-sm mt-3 rounded-lg bg-gray-800 text-gray-300 border border-gray-700"
         role="alert"
       >
-        You can post whatever you want .{" "}
-        <span className="font-medium underline text-blue-600">Post here</span>
+        You can post whatever you want.{" "}
+        <span className="font-medium underline text-blue-400 cursor-pointer hover:text-blue-500">
+          Post here
+        </span>
       </div>
-      <div className="h-full  flex flex-col mt-5  xxs:ml-1 md:ml-12">
-      <Paperpost />
-      <Paperpost />
-      <Paperpost />
-      <Paperpost />
-      
-      
+      <div className="h-full flex flex-col mt-5 xxs:ml-1 md:ml-12 space-y-4">
+        <Paperpost />
+        <Paperpost />
+        <Paperpost />
+        <Paperpost />
       </div>
     </div>
   );
 }
 
-export default page;
+export default Page;
