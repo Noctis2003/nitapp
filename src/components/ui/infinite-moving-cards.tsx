@@ -3,13 +3,6 @@
 import { cn } from "@/lib/utils";
 import React, { useEffect, useState } from "react";
 
-import { Poppins } from "next/font/google";
-const poppins = Poppins({
-  subsets: ["latin"],
-  weight: ["400", "500", "700"], // Add the desired weights
-});
-
-
 export const InfiniteMovingCards = ({
   items,
   direction = "left",
@@ -32,7 +25,7 @@ export const InfiniteMovingCards = ({
 
   useEffect(() => {
     addAnimation();
-  }, );
+  }, []);
   const [start, setStart] = useState(false);
   function addAnimation() {
     if (containerRef.current && scrollerRef.current) {
@@ -92,21 +85,21 @@ export const InfiniteMovingCards = ({
           pauseOnHover && "hover:[animation-play-state:paused]"
         )}
       >
-        {items.map((item, )  => (
+        {items.map((item, idx) => (
           <li
-            className="w-[350px] max-w-full relative rounded-2xl border border-b-0 flex-shrink-0 border-slate-700 px-8 py-6 xxs:w-[200px] md:w-[450px]"
+            className="w-[350px] max-w-full relative rounded-2xl border border-b-0 flex-shrink-0 border-slate-700 px-8 py-6 xxs:h-fit md:h-auto xxs:w-[200px] md:w-[450px]"
             style={{
               background:
                 "linear-gradient(180deg, var(--slate-800), var(--slate-900)",
             }}
             key={item.name}
           >
-            <blockquote className={`${poppins.className} `}>
+            <blockquote>
               <div
                 aria-hidden="true"
-                className="user-select-none -z-1 pointer-events-none absolute -left-0.5 -top-0.5 h-5  rounded-lg"
+                className="user-select-none -z-1 pointer-events-none absolute -left-0.5 top-7 h-[calc(100%_+_4px)] w-[calc(100%_+_4px)]"
               ></div>
-              <span className=" relative z-20 text-sm leading-[1.6] text-gray-100 font-medium ">
+              <span className=" relative z-20 text-sm leading-[1.6] text-gray-100 font-normal">
                 {item.quote}
               </span>
               <div className="relative z-20 mt-6 flex flex-row items-center">

@@ -1,6 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
+import { Poppins } from "next/font/google";
+import Link from "next/link";
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["400", "500", "700"], 
+})
+
 
 export default function RootLayout({
   children,
@@ -23,9 +31,9 @@ export default function RootLayout({
         className="inline-flex items-center p-2 mt-2 ms-3 text-sm text-gray-300 rounded-lg sm:hidden hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-600"
         onClick={toggleSidebar}
       >
-        <span className="sr-only">Open sidebar</span>
+        <span className="sr-only bg-gray-900">Open sidebar</span>
         <svg
-          className="w-6 h-6"
+          className="w-6 h-6 "
           aria-hidden="true"
           fill="currentColor"
           viewBox="0 0 20 20"
@@ -46,57 +54,103 @@ export default function RootLayout({
         } sm:translate-x-0`}
         aria-label="Sidebar"
       >
-        <div className="h-full px-3 py-4 overflow-y-auto">
-          <ul className="space-y-2 font-medium text-gray-300">
+        <div className={`${poppins.className} h-full px-3 py-4 overflow-y-auto`}>
+          <ul className="space-y-2 font-medium text-gray-300 flex flex-col gap-5">
+            <li>
+              <Link href="/featured/paper"
+                className="flex items-center p-2 rounded-lg hover:bg-gray-800"
+              >
+                <Image
+                src="/Icons/logout.png"
+                alt="logout"
+                width={25}
+                height={25}
+                />
+                <span className="ms-3 font-bold">Logout</span>
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/featured/sell"
+                className="flex items-center p-2 rounded-lg hover:bg-gray-800"
+              >
+                <Image
+                src="/Icons/shop.png"
+                alt="shop"
+                width={25}
+                height={25}
+                />
+                
+                <span className="flex-1 ms-3 font-bold">Shop</span>
+              </Link>
+            </li>
+
+
+            <li>
+              <Link
+                href="/featured/qna"
+                className="flex items-center p-2 rounded-lg hover:bg-gray-800"
+              >
+                <Image
+                src="/Icons/question.png"
+                alt="shop"
+                width={25}
+                height={25}
+                />
+                
+                <span className="flex-1 ms-3 font-bold">Doubts</span>
+              </Link>
+            </li>
+
+
+            <li>
+              <Link
+                href="/featured/paper"
+                className="flex items-center p-2 rounded-lg hover:bg-gray-800"
+              >
+             <Image
+             src="/Icons/forum.png"
+             alt="forum"
+             height={25}
+              width={25}
+             />
+                <span className="flex-1 ms-3 font-bold">Forums</span>
+              </Link>
+            </li>
+
+            <li>
+              <Link
+                href="/featured/confessions"
+                className="flex items-center p-2 rounded-lg hover:bg-gray-800"
+              >
+             <Image
+             src="/Icons/love.png"
+             alt="forum"
+             height={25}
+              width={25}
+             />
+                <span className="flex-1 ms-3 font-bold">Confessions</span>
+              </Link>
+            </li>
+
+
             <li>
               <a
                 href="#"
                 className="flex items-center p-2 rounded-lg hover:bg-gray-800"
               >
-                <svg
-                  className="w-5 h-5 text-gray-400 group-hover:text-white"
-                  aria-hidden="true"
-                  fill="currentColor"
-                  viewBox="0 0 22 21"
-                >
-                  <path d="M16.975 11H10V4.025a1 1 0 0 0-1.066-.998 8.5 8.5 0 1 0 9.039 9.039.999.999 0 0 0-1-1.066h.002Z" />
-                  <path d="M12.5 0c-.157 0-.311.01-.565.027A1 1 0 0 0 11 1.02V10h8.975a1 1 0 0 0 1-.935c.013-.188.028-.374.028-.565A8.51 8.51 0 0 0 12.5 0Z" />
-                </svg>
-                <span className="ms-3">Dashboard</span>
+             <Image
+             src="/Icons/handshake.png"
+             alt="forum"
+             height={30}
+              width={30}
+             />
+                <span className="flex-1 ms-3 font-bold">Collab</span>
               </a>
             </li>
-            <li>
-              <a
-                href="#"
-                className="flex items-center p-2 rounded-lg hover:bg-gray-800"
-              >
-                <svg
-                  className="w-5 h-5 text-gray-400 group-hover:text-white"
-                  aria-hidden="true"
-                  fill="currentColor"
-                  viewBox="0 0 18 18"
-                >
-                  <path d="M6.143 0H1.857A1.857 1.857 0 0 0 0 1.857v4.286C0 7.169.831 8 1.857 8h4.286A1.857 1.857 0 0 0 8 6.143V1.857A1.857 1.857 0 0 0 6.143 0Zm10 0h-4.286A1.857 1.857 0 0 0 10 1.857v4.286C10 7.169 10.831 8 11.857 8h4.286A1.857 1.857 0 0 0 18 6.143V1.857A1.857 1.857 0 0 0 16.143 0Zm-10 10H1.857A1.857 1.857 0 0 0 0 11.857v4.286C0 17.169.831 18 1.857 18h4.286A1.857 1.857 0 0 0 8 16.143v-4.286A1.857 1.857 0 0 0 6.143 10Zm10 0h-4.286A1.857 1.857 0 0 0 10 11.857v4.286c0 1.026.831 1.857 1.857 1.857h4.286A1.857 1.857 0 0 0 18 16.143v-4.286A1.857 1.857 0 0 0 16.143 10Z" />
-                </svg>
-                <span className="flex-1 ms-3">Kanban</span>
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                className="flex items-center p-2 rounded-lg hover:bg-gray-800"
-              >
-                <svg
-                  className="w-5 h-5 text-gray-400 group-hover:text-white"
-                  aria-hidden="true"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path d="m17.418 3.623-.018-.008a6.713 6.713 0 0 0-2.4-.569V2h1a1 1 0 1 0 0-2h-2a1 1 0 0 0-1 1v2H9.89A6.977 6.977 0 0 1 12 8v5h-2V8A5 5 0 1 0 0 8v6a1 1 0 0 0 1 1h8v4a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-4h6a1 1 0 0 0 1-1V8a5 5 0 0 0-2.582-4.377ZM6 12H4a1 1 0 0 1 0-2h2a1 1 0 0 1 0 2Z" />
-                </svg>
-                <span className="flex-1 ms-3">Inbox</span>
-              </a>
-            </li>
+
+
+
           </ul>
         </div>
       </aside>

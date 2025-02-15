@@ -17,8 +17,8 @@ function Page() {
             Find answers to your technical questions and help others answer theirs.
           </span>
         </div>
-        <button className="text-sm border border-blue-500 rounded-xl h-6 px-6 py-5 flex items-center font-light text-blue-400 hover:bg-blue-900 transition">
-          Ask question
+        <button className="rounded-xl text-lg bg-blue-500 h-[40px] px-3 " >
+          Post
         </button>
       </div>
       <div className="p-4 mb-4 text-sm text-blue-400 rounded-lg bg-gray-800 mt-5 xxs:w-full md:w-4/5">
