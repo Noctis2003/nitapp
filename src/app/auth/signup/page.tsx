@@ -2,45 +2,37 @@ import { Poppins } from "next/font/google";
 
 const poppins = Poppins({
   subsets: ["latin"],
-  weight: ["400", "500", "700"], // Add the desired weights
+  weight: ["400", "500", "700"],
 });
 
-function page() {
+function Page() {
   return (
-    <div
-      className={`h-full w-screen flex items-center justify-center ${poppins.className}`}
-    >
-      <div className="h-96 mt-9 border flex flex-col shadow-lg w-[390px] items-center relative">
-        <h1 className="mt-3 text-2xl font-bold h-6 text-center">
-          Create Account
+    <div className={`relative h-screen w-screen flex items-center justify-center bg-gray-900 ${poppins.className}`}>
+      <div className="h-96 border flex flex-col shadow-lg w-[390px] items-center backdrop-blur-lg  bg-gray-800/30 rounded-lg">
+        <h1 className="mt-11 text-2xl font-bold text-center text-white">
+        Sign up
         </h1>
+        
         <input
           type="text"
           placeholder="Email"
-          className="rounded-lg mt-7 border px-2 py-2 w-2/3"
+          className="rounded-lg mt-7 border px-3 py-2 w-2/3 text-white bg-gray-700  border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
 
         <input
           type="password"
           placeholder="Password"
-          className="rounded-lg mt-7 border px-2 py-2 w-2/3"
+          className="rounded-lg mt-4 border px-3 py-2 w-2/3  text-white bg-gray-700 border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
-      
-        <input
-          type="tel"
-          placeholder="OTP"
-          className="rounded-lg mt-7 border px-2 py-2 w-2/3"
-        />
-          
-        <button className="rounded-lg mt-7 border px-2 py-2 w-2/3 bg-[#0E64D2] text-white">
-          Verify email
+
+        <button className="rounded-lg mt-7 px-3 py-2 w-2/3 bg-[#0E64D2] text-white font-medium hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400">
+          Verify
         </button>
-        <div className="text-red-600 text-sm absolute bottom-0 ">
-        only official college Email accepted
-        </div>
+        <h1 className="absolute bottom-0 text-red-400" >Only official college id accepted</h1>
       </div>
+    
     </div>
   );
 }
 
-export default page;
+export default Page;

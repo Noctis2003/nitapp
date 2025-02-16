@@ -1,7 +1,7 @@
 import React from "react";
 import { Poppins } from "next/font/google";
 import Paperpost from "@/components/Paperpost";
-
+import Forumbutton from "@/components/Forumbutton";
 const poppins = Poppins({
   subsets: ["latin"],
   weight: ["400", "500", "700"],
@@ -9,7 +9,7 @@ const poppins = Poppins({
 
 function Page() {
   return (
-    <div className={`w-full  flex flex-col flex-grow ${poppins.className} bg-gray-950 text-white`}>
+    <div className={`w-full  flex flex-col flex-grow ${poppins.className} bg-gray-950 text-white xxs:mt-9 md:mt-0`}>
       <h1 className="w-full text-center text-5xl font-extrabold mt-4">
         Daily Feed
       </h1>
@@ -18,9 +18,7 @@ function Page() {
         role="alert"
       >
         You can post whatever you want.{" "}
-        <span className="font-medium underline text-blue-400 cursor-pointer hover:text-blue-500">
-          Post here
-        </span>
+       <Forumbutton/>
       </div>
       <div className="h-full flex flex-col mt-5 xxs:ml-1 md:ml-12 space-y-4">
         <Paperpost />

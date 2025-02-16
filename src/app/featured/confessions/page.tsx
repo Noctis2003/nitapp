@@ -14,7 +14,7 @@ export default function InfiniteMovingCardsDemo() {
   return (
     <div className={` ${poppins.className} h-[40rem] rounded-md flex flex-col antialiased dark:bg-grid-white/[0.05] items-center justify-center relative overflow-hidden`}>
       <button 
-        className="absolute font-extrabold xxs:top-0 md:top-3 right-3 xxs:py-1 xxs:px-3 md:px-6 md:py-3 bg-[#3B82F6] text-white  rounded-xl shadow-lg transition-all hover:bg-red-700 active:scale-95"
+        className="absolute font-extrabold xxs:top-0 md:top-10 right-3 xxs:py-1 xxs:px-3 md:px-6 md:py-3 bg-[#3B82F6] text-white  rounded-xl shadow-lg transition-all hover:bg-red-700 active:scale-95"
         onClick={() => {
           setShowTextbox(!showTextbox);
           setSpeed("slow");
@@ -33,7 +33,7 @@ export default function InfiniteMovingCardsDemo() {
           <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-xl p-6 w-96 shadow-lg">
             <input
               type="text"
-              placeholder="Enter text..."
+              placeholder="Say i love you..."
               className="w-full px-4 py-2 bg-transparent text-white border border-gray-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
             />
             <button 
