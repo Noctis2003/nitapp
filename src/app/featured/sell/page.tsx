@@ -1,5 +1,4 @@
 import React from "react";
-import Link from "next/link";
 import { Poppins } from "next/font/google";
 import Sellbutton from "@/components/Sellbutton";
 

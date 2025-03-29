@@ -11,7 +11,6 @@ function Sellbutton() {
     const [productName, setProductName] = useState("");
     const [productDescription, setProductDescription] = useState("");
     const [productPrice, setProductPrice] = useState("");
-    const [productImage, setProductImage] = useState(null);
   return (
     <>
     <button
