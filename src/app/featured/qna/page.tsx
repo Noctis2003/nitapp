@@ -1,7 +1,7 @@
 import React from "react";
 import { Poppins } from "next/font/google";
 import Posts from "@/components/Posts";
-
+import Link from "next/link";
 const poppins = Poppins({
   subsets: ["latin"],
   weight: ["400", "500", "700"], // Add the desired weights
@@ -17,9 +17,11 @@ function Page() {
             Find answers to your technical questions and help others answer theirs.
           </span>
         </div>
+        <Link href="/featured/qna/ask" >
         <button className="rounded-xl text-lg bg-blue-500 h-[40px] px-3 " >
           Post
         </button>
+        </Link>
       </div>
       <div className="p-4 mb-4 text-sm text-blue-400 rounded-lg bg-gray-800 mt-5 xxs:w-full md:w-4/5">
         <span className="font-medium">Important </span>
