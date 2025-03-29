@@ -2,8 +2,6 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { Poppins } from "next/font/google";
-import { useForm } from "react-hook-form";
-
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -11,23 +9,49 @@ const poppins = Poppins({
 });
 
 function AskQuestionPage() {
-  const { register, handleSubmit, formState: { errors } } = useForm();
+  const [formData, setFormData] = useState({
+    title: "",
+    description: "",
+    tags: "",
+    image: null as File | null,
+  });
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [previewImage, setPreviewImage] = useState<string | null>(null);
 
-
+  // Handle Input Change
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   // Handle Image Upload Preview
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      if (file.size > 5 * 1024 * 1024) { // Limit to 5MB
+      if (file.size > 5 * 1024 * 1024) {
         alert("Image size should be less than 5MB.");
         return;
       }
+      setFormData({ ...formData, image: file });
       const reader = new FileReader();
       reader.onloadend = () => setPreviewImage(reader.result as string);
       reader.readAsDataURL(file);
     }
+  };
+
+  // Handle Form Submission
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!formData.title.trim()) validationErrors.title = "Title is required";
+    if (!formData.description.trim()) validationErrors.description = "Description is required";
+    if (!formData.tags.trim()) validationErrors.tags = "At least one tag is required";
+    
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+    setErrors({});
+    console.log("Submitted Data:", formData);
   };
 
   return (
@@ -40,44 +64,46 @@ function AskQuestionPage() {
       </div>
 
       <div className="w-full md:w-3/4 bg-gray-800 p-5 rounded-lg mt-5">
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
-          {/* Question Title */}
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div>
             <label className="block text-lg font-semibold mb-1">Title</label>
             <input
-              {...register("title", { required: "Title is required" })}
+              name="title"
               type="text"
               placeholder="Enter a clear and concise title"
+              value={formData.title}
+              onChange={handleChange}
               className="w-full p-2 rounded-md bg-gray-700 border border-gray-600 focus:ring-2 focus:ring-blue-400"
             />
-            {errors.title && <p className="text-red-500 text-sm">{errors.title.message}</p>}
+            {errors.title && <p className="text-red-500 text-sm">{errors.title}</p>}
           </div>
 
-          {/* Question Description */}
           <div>
             <label className="block text-lg font-semibold mb-1">Description</label>
             <textarea
-              {...register("description", { required: "Description is required" })}
+              name="description"
               rows={5}
               placeholder="Explain your question in detail"
+              value={formData.description}
+              onChange={handleChange}
               className="w-full p-2 rounded-md bg-gray-700 border border-gray-600 focus:ring-2 focus:ring-blue-400"
             />
-            {errors.description && <p className="text-red-500 text-sm">{errors.description.message}</p>}
+            {errors.description && <p className="text-red-500 text-sm">{errors.description}</p>}
           </div>
 
-          {/* Tags Input */}
           <div>
             <label className="block text-lg font-semibold mb-1">Tags</label>
             <input
-              {...register("tags", { required: "At least one tag is required" })}
+              name="tags"
               type="text"
               placeholder="e.g., JavaScript, Next.js, MongoDB"
+              value={formData.tags}
+              onChange={handleChange}
               className="w-full p-2 rounded-md bg-gray-700 border border-gray-600 focus:ring-2 focus:ring-blue-400"
             />
-            {errors.tags && <p className="text-red-500 text-sm">{errors.tags.message}</p>}
+            {errors.tags && <p className="text-red-500 text-sm">{errors.tags}</p>}
           </div>
 
-          {/* Image Upload */}
           <div>
             <label className="block text-lg font-semibold mb-1">Upload Image (Optional)</label>
             <input
@@ -87,17 +113,13 @@ function AskQuestionPage() {
               onChange={handleImageUpload}
             />
             <span className="text-gray-400 text-sm">Max size: 5MB | PNG, JPG, JPEG</span>
-
-            {/* Image Preview */}
             {previewImage && (
               <div className="mt-3">
                 <Image src={previewImage} alt="Preview" width={192} height={192} className="mt-2 rounded-lg shadow-lg" />
-               
               </div>
             )}
           </div>
 
-          {/* Submit Button */}
           <button
             type="submit"
             className="rounded-xl text-lg bg-blue-500 h-[40px] px-3 hover:bg-blue-600 transition"
@@ -106,9 +128,6 @@ function AskQuestionPage() {
           </button>
         </form>
       </div>
-
-      {/* Back to Home Link */}
-     
     </div>
   );
 }
