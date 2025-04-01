@@ -15,6 +15,7 @@ function AskQuestionPage() {
     tags: "",
     image: null as File | null,
   });
+  
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [previewImage, setPreviewImage] = useState<string | null>(null);
 
@@ -41,6 +42,8 @@ function AskQuestionPage() {
   // Handle Form Submission
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    const validationErrors: { [key: string]: string } = {}; // Define validationErrors here
     
     if (!formData.title.trim()) validationErrors.title = "Title is required";
     if (!formData.description.trim()) validationErrors.description = "Description is required";
