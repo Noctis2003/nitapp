@@ -56,11 +56,15 @@ function Sellbutton() {
 
       {/* Product Image Upload */}
       <input
-        type="file"
-        accept="image/*"
-        className="w-full text-sm  mt-3 p-3 bg-transparent border border-gray-400 text-white rounded-lg focus:outline-none"
-        onChange={(e) => setProductImage(e.target.files[0])}
-      />
+  type="file"
+  accept="image/*"
+  className="w-full text-sm mt-3 p-3 bg-transparent border border-gray-400 text-white rounded-lg focus:outline-none"
+  onChange={(e) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setProductImage(e.target.files[0]);
+    }
+  }}
+/>
 
       {/* Buttons */}
       <div className="flex justify-end mt-4 space-x-2">
