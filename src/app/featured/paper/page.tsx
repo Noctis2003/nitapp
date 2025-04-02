@@ -10,9 +10,8 @@ const poppins = Poppins({
 function Page() {
   return (
     <div className={`w-full  flex flex-col flex-grow ${poppins.className} bg-gray-950 text-white xxs:mt-9 md:mt-0`}>
-      <h1 className="w-full text-center text-5xl font-extrabold mt-4">
-        Daily Feed
-      </h1>
+      <h1 className="w-full text-center text-5xl font-extrabold xxs:mt-6 md:mt-3">
+        Daily Feed </h1>
       <div
         className="p-4 text-center text-sm mt-3 rounded-lg bg-gray-800 text-gray-300 border border-gray-700"
         role="alert"

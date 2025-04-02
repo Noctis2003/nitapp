@@ -8,7 +8,7 @@ const poppins = Poppins({
 function Page() {
   return (
     <div className={`h-screen w-screen flex items-center justify-center bg-gray-900 ${poppins.className}`}>
-      <div className="h-96 border flex flex-col shadow-lg w-[390px] items-center backdrop-blur-lg  bg-gray-800/30 rounded-lg">
+      <div className="h-96  md:border flex flex-col shadow-lg w-[390px] items-center backdrop-blur-lg md:bg-gray-800/30 rounded-lg">
         <h1 className="mt-11 text-2xl font-bold text-center text-white">
           Hi, Welcome back 👋
         </h1>

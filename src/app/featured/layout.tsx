@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { useSwipeable } from "react-swipeable";
 import { Poppins } from "next/font/google";
 import Link from "next/link";
 const poppins = Poppins({
@@ -9,6 +10,8 @@ const poppins = Poppins({
   weight: ["400", "500", "700"], 
 })
 
+// import { usePathname } from "next/navigation";
+// import { usePathname } from "next/navigation";
 
 export default function RootLayout({
   children,
@@ -16,25 +19,32 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
+  const [rotated, setRotated] = useState(false);
   const toggleSidebar = () => {
+    setRotated(!rotated);
     setIsSidebarOpen(!isSidebarOpen);
   };
 
+  const handlers = useSwipeable({
+    onSwipedLeft: () => setOpen(null), // Collapse on left swipe
+    onSwipedRight: () => setOpen("item-1"), // Expand on right swipe
+  });
+
   return (
     <>
-       <nav className="fixed md:hidden top-0 left-0 w-full bg-gray-900 text-white p-4 shadow-lg flex items-center justify-between sm:justify-start sm:pl-8 z-50">
+       <nav {...handlers} className="fixed md:hidden top-0 left-0 w-full bg-gray-900 text-white p-4 shadow-lg flex items-center justify-between sm:justify-start sm:pl-8 z-50">
  
         <div className={` ${poppins.className} text-xl font-bold`}>CollegeHub</div>
 
        
         <button
           type="button"
-          className="sm:hidden p-2 text-gray-300 rounded-lg hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-600"
+          className="sm:hidden p-2 text-gray-300 rounded-lg  "
           onClick={toggleSidebar}
         >
           <span className="sr-only">Open sidebar</span>
           <Image
+              className={`transition-transform duration-300 ${rotated ? "rotate-90" : ""}`}
                 src="/Icons/menu.png"
                 alt="shop"
                 width={35}
@@ -50,8 +60,8 @@ export default function RootLayout({
         aria-label="Sidebar"
       >
         <div className={`${poppins.className} h-full px-3 py-4 overflow-y-auto`}>
-          <ul className="space-y-2 font-medium text-gray-300 flex flex-col gap-5">
-            <li>
+          <ul className="space-y-2 font-medium text-gray-300 flex flex-col gap-5 xxs:mt-20 md:mt-5">
+            <li  >
               <Link href="/featured/paper"
                 className="flex items-center p-2 rounded-lg hover:bg-gray-800"
               >

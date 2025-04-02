@@ -1,5 +1,6 @@
 import React from "react";
-import Image from "next/image";
+import { ThumbsUp } from 'lucide-react';
+import { MessageCircle } from 'lucide-react';
 
 function Paperpost() {
   return (
@@ -16,17 +17,13 @@ function Paperpost() {
         <div className="w-full text-xs mt-4 flex flex-row gap-6">
           <div className="flex items-center justify-center">Nov 12, 2024</div>
           <div className="flex flex-row gap-1 items-center justify-center ">
-         <Image 
-         width={17}
-         height={17}
-         alt="like"
-         src="/Icons/chat-bubble.png"
-         />
+         <MessageCircle />
             234
           </div>
+         
           <div className="flex flex-row gap-1 items-center justify-center ">
     
-
+          <ThumbsUp  />
             234
           </div>
         </div>

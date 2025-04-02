@@ -58,7 +58,7 @@ function AskQuestionPage() {
   };
 
   return (
-    <div className={`h-full flex flex-col items-center bg-gray-950 text-gray-300 ${poppins.className} p-5`}>
+    <div className={`xxs:mt-11 md:mt-2 h-full flex flex-col items-center bg-gray-950 text-gray-300 ${poppins.className} p-5`}>
       <div className="w-full md:w-3/4 text-3xl font-extrabold gap-3 flex flex-col px-4">
         <h1>Ask a Question</h1>
         <span className="text-sm font-light text-gray-400">
