@@ -33,6 +33,8 @@ function Sellbutton() {
 
   const onSubmit = (data: FormData) => {
     console.log("Submitted Data:", data);
+    // Handle the form submission logic here, e.g., send data to the server
+    
     reset();
     setIsOpen(false);
   };

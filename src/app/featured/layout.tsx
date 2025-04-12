@@ -25,6 +25,13 @@ export default function RootLayout({
     setIsSidebarOpen(!isSidebarOpen);
   };
 
+  const logout = async () => {
+    await fetch('http://localhost:4000/auth/logout', {
+      method: 'POST',
+      credentials: 'include', // <== VERY IMPORTANT for sending cookies
+    });
+    console.log("Logged out successfully");
+  }
   const handlers = useSwipeable({
     onSwipedLeft: () => setOpen(null), // Collapse on left swipe
     onSwipedRight: () => setOpen("item-1"), // Expand on right swipe
@@ -62,8 +69,10 @@ export default function RootLayout({
         <div className={`${poppins.className} h-full px-3 py-4 overflow-y-auto`}>
           <ul className="space-y-2 font-medium text-gray-300 flex flex-col gap-5 xxs:mt-20 md:mt-5">
             <li  >
-              <Link href="/featured/paper"
+              <Link href="/auth/login"
+              onClick={logout}
                 className="flex items-center p-2 rounded-lg hover:bg-gray-800"
+                
               >
                 <Image
                 src="/Icons/logout.png"
@@ -86,7 +95,7 @@ export default function RootLayout({
                 height={25}
                 />
                 
-                <span className="flex-1 ms-3 font-bold">Shop</span>
+                <span className="flex-1 ms-3 font-bold">Sell</span>
               </Link>
             </li>
 
@@ -110,7 +119,7 @@ export default function RootLayout({
 
             <li>
               <Link
-                href="/featured/paper"
+                href="/featured/forum"
                 className="flex items-center p-2 rounded-lg hover:bg-gray-800"
               >
              <Image

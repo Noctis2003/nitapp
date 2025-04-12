@@ -1,46 +1,119 @@
 "use client";
 
-import { InfiniteMovingCards } from "@/components/ui/infinite-moving-cards";
 import { Poppins } from "next/font/google";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
 const poppins = Poppins({
   subsets: ["latin"],
-  weight: ["400", "500", "700"], // Add the desired weights
+  weight: ["400", "500", "700"],
 });
-export default function InfiniteMovingCardsDemo() {
-  const [showTextbox, setShowTextbox] = useState(false);
-  const [speed, setSpeed] = useState("slow");
+
+const graffitiIcons = [
+  "😈", "💋", "💀", "🧃", "🚬", "🔥", "🎧", "👀", "🔪", "🥀", "🌀", "✨","nitj","nitj","nitj"
+];
+
+
+function GraffitiLayer() {
+  const [positions, setPositions] = useState<
+    { top: string; left: string; rotate: string; emoji: string; size: string }[]
+  >([]);
+
+  useEffect(() => {
+    const newPositions = Array.from({ length: 40 }, () => ({
+      top: `${Math.floor(Math.random() * 100)}%`,
+      left: `${Math.floor(Math.random() * 100)}%`,
+      rotate: `${Math.floor(Math.random() * 360)}deg`,
+      emoji: graffitiIcons[Math.floor(Math.random() * graffitiIcons.length)],
+      size: `${Math.floor(Math.random() * 24) + 12}px`,
+    }));
+    setPositions(newPositions);
+  }, []);
 
   return (
-    <div className={` ${poppins.className} h-[40rem] rounded-md flex flex-col antialiased dark:bg-grid-white/[0.05] items-center justify-center relative overflow-hidden`}>
-      <button 
-        className="absolute font-extrabold xxs:top-0 md:top-10 right-3 xxs:py-1 xxs:px-3 md:px-6 md:py-3 bg-[#3B82F6] text-white  rounded-xl shadow-lg transition-all hover:bg-red-700 active:scale-95"
-        onClick={() => {
-          setShowTextbox(!showTextbox);
-          setSpeed("slow");
-        }}
-      >
-        Confess
-      </button>
-      <InfiniteMovingCards
-        items={testimonials}
-        direction="right"
-        speed={speed}
-      />
+    <>
+      {positions.map((pos, i) => (
+        <div
+          key={i}
+          className="absolute text-white opacity-[0.5] pointer-events-none select-none"
+          style={{
+            top: pos.top,
+            left: pos.left,
+            transform: `rotate(${pos.rotate})`,
+            fontSize: pos.size,
+          }}
+        >
+          {pos.emoji}
+        </div>
+      ))}
+    </>
+  );
+}
 
+export default function ToiletWall() {
+  const [showTextbox, setShowTextbox] = useState(false);
+  const [notes, setNotes] = useState(initialNotes);
+  const [input, setInput] = useState("");
+
+  const handlePost = () => {
+    if (input.trim() !== "") {
+      setNotes([
+        { quote: input, name: "Anon", title: "Stall Whisper" },
+        ...notes,
+      ]);
+      setInput("");
+      setShowTextbox(false);
+    }
+  };
+
+  return (
+    <div
+      className={`${poppins.className} min-h-screen text-white p-6 relative overflow-hidden`}
+    >
+      {/* Graffiti background layer */}
+      <GraffitiLayer />
+
+      {/* Header */}
+      <h1 className="text-3xl font-bold mb-6 text-center">🧻 Gossip Wall</h1>
+
+      {/* Button to post */}
+      <button
+        onClick={() => setShowTextbox(true)}
+        className="fixed bottom-6 right-6 bg-[#8B5CF6] text-white font-bold py-3 px-6 rounded-full shadow-lg hover:bg-purple-800 transition-all z-50"
+      >
+        Write Something ✍️
+      </button>
+
+      {/* Notes List */}
+      <div className="flex flex-col gap-4 mt-4 z-10 relative">
+        {notes.map((note, index) => (
+          <div
+            key={index}
+            className="bg-white/10 backdrop-blur-md border border-white/20 rounded-xl p-4 shadow-md hover:scale-[1.02] transition-all"
+          >
+            <p className="text-lg">{note.quote}</p>
+            <div className="mt-2 text-sm opacity-60">
+              — {note.name} • <i>{note.title}</i>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Modal for writing */}
       {showTextbox && (
-        <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-xl p-6 w-96 shadow-lg">
-            <input
-              type="text"
-              placeholder="Say i love you..."
-              className="w-full px-4 py-2 bg-transparent text-white border border-gray-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
+        <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center">
+          <div className="bg-[#1f1f1f] border border-white/20 rounded-xl p-6 w-96 shadow-xl">
+            <textarea
+              rows={4}
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="Spill your secrets..."
+              className="w-full px-4 py-2 bg-transparent text-white border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
             />
-            <button 
-              onClick={() => setShowTextbox(false)} 
-              className="mt-4 w-full font-bold px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
+            <button
+              onClick={handlePost}
+              className="mt-4 w-full font-bold px-4 py-2 bg-purple-700 text-white rounded-lg hover:bg-purple-800 transition"
             >
-              Confess
+              Post on the Wall 🚽
             </button>
           </div>
         </div>
@@ -49,34 +122,21 @@ export default function InfiniteMovingCardsDemo() {
   );
 }
 
-const testimonials = [
+
+const initialNotes = [
   {
-    quote:
-      "It was the best of times, it was the worst of times, it was the age of wisdom, it was the age of foolishness, it was the epoch of belief, it was the epoch of incredulity, it was the season of Light, it was the season of Darkness, it was the spring of hope, it was the winter of despair.",
-    name: "Charles Dickens",
-    title: "A Tale of Two Cities",
+    quote: "I changed my friend's alarm to ‘Bach ke rehna re baba’. He still doesn't know.",
+    name: "Troublemaker",
+    title: "Classic Prank",
   },
   {
-    quote:
-      "To be, or not to be, that is the question: Whether 'tis nobler in the mind to suffer The slings and arrows of outrageous fortune, Or to take Arms against a Sea of troubles, And by opposing end them: to die, to sleep.",
-    name: "William Shakespeare",
-    title: "Hamlet",
+    quote: "Someone stole my lunch in 2nd grade and I still think about it.",
+    name: "Still Hungry",
+    title: "Unresolved Trauma",
   },
   {
-    quote: "All that we see or seem is but a dream within a dream.",
-    name: "Edgar Allan Poe",
-    title: "A Dream Within a Dream",
-  },
-  {
-    quote:
-      "It is a truth universally acknowledged, that a single man in possession of a good fortune, must be in want of a wife.",
-    name: "Jane Austen",
-    title: "Pride and Prejudice",
-  },
-  {
-    quote:
-      "Call me Ishmael. Some years ago—never mind how long precisely—having little or no money in my purse, and nothing particular to interest me on shore, I thought I would sail about a little and see the watery part of the world.",
-    name: "Herman Melville",
-    title: "Moby-Dick",
+    quote: "I fake laugh at my boss’s jokes so well I should get an Oscar.",
+    name: "Corporate Clown",
+    title: "Office Truths",
   },
 ];
