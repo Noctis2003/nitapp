@@ -100,23 +100,7 @@ export default function RootLayout({
             </li>
 
 
-            <li>
-              <Link
-                href="/featured/qna"
-                className="flex items-center p-2 rounded-lg hover:bg-gray-800"
-              >
-                <Image
-                src="/Icons/question.png"
-                alt="shop"
-                width={25}
-                height={25}
-                />
-                
-                <span className="flex-1 ms-3 font-bold">Doubts</span>
-              </Link>
-            </li>
-
-
+        
             <li>
               <Link
                 href="/featured/forum"
@@ -149,8 +133,8 @@ export default function RootLayout({
 
 
             <li>
-              <a
-                href="#"
+            <Link
+                href="/featured/collab"
                 className="flex items-center p-2 rounded-lg hover:bg-gray-800"
               >
              <Image
@@ -160,7 +144,7 @@ export default function RootLayout({
               width={30}
              />
                 <span className="flex-1 ms-3 font-bold">Collab</span>
-              </a>
+                </Link>
             </li>
 
 

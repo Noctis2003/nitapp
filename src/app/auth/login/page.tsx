@@ -32,7 +32,7 @@ function GraffitiLayer() {
   >([]);
 
   useEffect(() => {
-    const newPositions = Array.from({ length: 40 }, () => ({
+    const newPositions = Array.from({ length: 50 }, () => ({
       top: `${Math.floor(Math.random() * 90)}%`,
       left: `${Math.floor(Math.random() * 90)}%`,
       rotate: `${Math.floor(Math.random() * 360)}deg`,
@@ -100,7 +100,7 @@ function Page() {
 
       if (res.status === 200 || res.status === 201) {
         localStorage.setItem("token", res.data.access_token);
-        router.push("/featured/qna");
+        router.push("/featured/collab");
       }
     } catch (err) {
       if (err.response) {
