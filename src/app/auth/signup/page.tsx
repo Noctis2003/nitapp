@@ -23,7 +23,20 @@ const signupSchema = z.object({
 type SignupFormData = z.infer<typeof signupSchema>;
 
 const graffitiIcons = [
-  "😈", "💋", "💀", "🧃", "🚬", "🔥", "🎧", "👀", "🔪", "🥀", "🌀", "✨",
+ "💊",
+  "💉",
+  "🩹",
+  "🧬",
+  "🌿",
+  "🧪",
+  "🫙",
+  "🧻",
+  "🚬",
+  "🍄",
+  "🩺",
+  "⚗️",
+  "🥼",
+  "🔬",
 ];
 const funkyLightColors = [
   'bg-pink-300',

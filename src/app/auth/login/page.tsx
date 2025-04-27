@@ -22,7 +22,20 @@ const loginSchema = z.object({
 type LoginFormData = z.infer<typeof loginSchema>;
 
 const graffitiIcons = [
-  "😈", "💋", "💀", "🧃", "🚬", "🔥", "🎧", "👀", "🔪", "🥀", "🌀", "✨",
+ "💊",
+  "💉",
+  "🩹",
+  "🧬",
+  "🌿",
+  "🧪",
+  "🫙",
+  "🧻",
+  "🚬",
+  "🍄",
+  "🩺",
+  "⚗️",
+  "🥼",
+  "🔬",
 ];
 
 
@@ -116,7 +129,7 @@ function Page() {
   return (
     
     <div
-      className={`h-screen w-screen flex items-center justify-center bg-gray-900 ${poppins.className} overflow-x-hidden`}
+      className={`h-screen w-screen flex items-center justify-center bg-gray-900 ${poppins.className} overflow-hidden flex flex-grow`}
     >
       <GraffitiLayer />
       <form

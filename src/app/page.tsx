@@ -1,11 +1,12 @@
+"use client";
 import React from "react";
 import { BackgroundLines } from "@/components/ui/background-lines";
 import {TextGenerateEffect} from "@/components/ui/text-generate-effect";
 import ColourfulText from "@/components/ui/colourful-text";
 import Link from "next/link";
 export default function BackgroundLinesDemo() {
-  const array=["This is the point of no return ."]
-  
+  const array=["Ready to play?"]
+
    const words=array[Math.floor(Math.random() * array.length)];
   return (
     <BackgroundLines className="flex items-center justify-center w-full flex-col px-4">

@@ -1,12 +1,13 @@
 "use client";
 import React from "react";
 import { motion } from "motion/react";
-import { Poppins } from 'next/font/google';
+import { Press_Start_2P } from 'next/font/google'
 
-const poppins = Poppins({
+const pressStart2P = Press_Start_2P({
+  weight: '400',
   subsets: ['latin'],
-  weight: ['400', '500', '700'], // Add the desired weights
-});
+})
+
 export default function ColourfulText({ text }: { text: string }) {
   const colors = [
     "rgb(131, 179, 32)",
@@ -51,7 +52,7 @@ export default function ColourfulText({ text }: { text: string }) {
         duration: 0.5,
         delay: index * 0.05,
       }}
-      className={`inline-block whitespace-pre ${poppins.className} tracking-tight`}
+      className={`inline-block whitespace-pre ${pressStart2P.className} tracking-tight xxs:text-3xl md:text-8xl`}
     >
       {char}
     </motion.span>

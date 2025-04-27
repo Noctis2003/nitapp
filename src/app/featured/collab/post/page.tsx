@@ -13,7 +13,7 @@ const formSchema = z.object({
   name: z.string().min(1, "Name is required"),
   description: z
     .string()
-    .min(10, "The description must be at least 10 characters"),
+    .min(50, "The description must be at least 50 characters"),
   roles: z
     .array(z.string().min(1, "Role cannot be empty"))
     .min(1, "At least one role is required"),
@@ -74,7 +74,7 @@ export default function EpicIdeaForm() {
 
   return (
     <div
-      className={`mt-0 h-screen bg-gray-950 text-white flex items-center justify-center px-4 py-6 ${poppins.className}`}
+      className={`mt-0  text-white flex flex-grow items-center justify-center px-4 py-6 ${poppins.className}`}
     >
       <div className="w-full max-w-3xl bg-gradient-to-br from-gray-900 to-gray-800 border border-gray-700/50 p-8 rounded-3xl shadow-[0_0_30px_#22d3ee33]">
         <h1 className="text-3xl md:text-4xl font-extrabold text-cyan-400 text-center tracking-tight mb-6 flex items-center justify-center gap-3">

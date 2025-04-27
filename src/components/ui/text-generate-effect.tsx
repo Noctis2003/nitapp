@@ -2,12 +2,14 @@
 import { useEffect } from "react";
 import { motion, stagger, useAnimate } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { Poppins } from 'next/font/google';
+import { Press_Start_2P } from 'next/font/google'
 
-const poppins = Poppins({
+const pressStart2P = Press_Start_2P({
+  weight: '400',
   subsets: ['latin'],
-  weight: ['400', '500', '700'], // Add the desired weights
-});
+})
+
+
 
 export const TextGenerateEffect = ({
   words,
@@ -59,7 +61,7 @@ export const TextGenerateEffect = ({
   return (
     <div className={cn("font-bold", className)}>
       <div className="mt-4">
-        <div className={`${poppins.className} dark:text-white text-black text-xl leading-snug tracking-wide`}>
+        <div className={`${pressStart2P.className} dark:text-white text-black xxs:text-base md:text-xl leading-snug tracking-wide`}>
           {renderWords()}
         </div>
       </div>
