@@ -4,10 +4,6 @@ export function middleware(request: NextRequest) {
   const token = request.cookies.get('jwt')?.value;
   const pathname = request.nextUrl.pathname;
 
-  if (process.env.NODE_ENV === 'development') {
-    console.log('JWT Token:', token);
-  }
-
   // 🔁 If user is on the homepage `/` and has token, redirect to confessions
   if (pathname === '/' && token) {
     const redirectTo =

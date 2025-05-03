@@ -43,7 +43,7 @@ function GraffitiLayer() {
         withCredentials: true,
       });
       console.log("Domain:", domain);
-      graffitiIcons.push(domain.data); // Add the domain to the graffiti icons
+      // Add the domain to the graffiti icons
 
       const newPositions = Array.from({ length: 50 }, () => ({
         top: `${Math.floor(Math.random() * 100)}%`,
@@ -203,7 +203,7 @@ export default function ToiletWall() {
 
   return (
     <div
-      className={`${poppins.className} min-h-screen text-white p-6 relative overflow-hidden mt-3`}
+      className={`${poppins.className} min-h-screen text-white  xxs::px-0 xxs:py-6  md:p-6 relative overflow-hidden mt-3`}
     >
       <GraffitiLayer />
 
@@ -226,7 +226,7 @@ export default function ToiletWall() {
       </button>
 
       {/* Carousel Container */}
-      <div className="relative max-w-2xl mx-auto mt-10 h-auto">
+      <div className="relative md:max-w-2xl mx-auto mt-10 h-auto xxs:w-full  ">
         {loading ? (
           <div className="flex items-center justify-center h-full">
             <p className="text-center text-white/70 text-xl">Loading juicy secrets...</p>
@@ -246,7 +246,7 @@ export default function ToiletWall() {
               onTouchEnd={handleTouchEnd}
             >
               <div 
-                className="backdrop-blur-xl rounded-xl p-6 shadow-lg w-full h-full flex items-center justify-center transition-all duration-300"
+                className="bg-gray-950 rounded-xl p-6 shadow-lg w-full h-full flex items-center justify-center transition-all duration-300"
               >
                 <p className={`${shadows.className} text-2xl text-center`}>{notes[currentIndex].content}</p>
               </div>

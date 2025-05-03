@@ -9,7 +9,7 @@ const poppins = Poppins({
 export default function ProductCard() {
   return (
     <div
-      className={`${poppins.className} mt-3 w-80 border border-gray-700 rounded-lg p-4 flex flex-col items-center h-96 shadow-md bg-gray-900 text-white`}
+      className={`${poppins.className} mt-3 xxs:w-full md:w-80 border border-gray-700 rounded-lg p-4 flex flex-col items-center h-96 shadow-md bg-gray-900 text-white`}
     >
       <Image
         src="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"

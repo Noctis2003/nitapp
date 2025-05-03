@@ -17,7 +17,7 @@ function page() {
         <Sellbutton/>
       </h1>
       <div className="flex flex-grow flex-wrap xxs:flex-col md:flex-row  md:justify-evenly" >
-          <ProductCard />
+          <ProductCard  />
           <ProductCard />
           <ProductCard />
           <ProductCard />

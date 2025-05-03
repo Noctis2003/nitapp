@@ -180,7 +180,7 @@ function Page() {
         <button
           type="button"
           onClick={() => router.push("/auth/signup")}
-          className="w-4/5 px-3 py-2 rounded-lg bg-green-600 text-white font-medium focus:outline-none focus:ring-2 focus:ring-gray-400"
+           className="w-4/5 px-3 py-2 rounded-lg bg-gray-950 border border-white text-white font-medium focus:outline-none focus:ring-2 focus:ring-gray-400"
         >
           Sign up
         </button>

@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Poppins } from "next/font/google";
+import axios from "axios";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -21,6 +22,9 @@ type FormData = z.infer<typeof formSchema>;
 
 function Sellbutton() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  
   const {
     register,
     handleSubmit,
@@ -31,12 +35,64 @@ function Sellbutton() {
     resolver: zodResolver(formSchema),
   });
 
-  const onSubmit = (data: FormData) => {
-    console.log("Submitted Data:", data);
-    // Handle the form submission logic here, e.g., send data to the server
-    
-    reset();
-    setIsOpen(false);
+  async function uploadToCloudinary(file: File) {
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", "noctis_unsigned"); // Replace with your preset
+      
+      const res = await fetch(`https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`, {
+        method: "POST",
+        body: formData,
+      });
+      
+      if (!res.ok) {
+        throw new Error("Failed to upload image");
+      }
+      
+      const data = await res.json();
+      return data.secure_url;
+    } catch (error) {
+      console.error("Error uploading to Cloudinary:", error);
+      throw error;
+    }
+  }
+
+  const onSubmit = async (data: FormData) => {
+    try {
+      setIsSubmitting(true);
+      setError(null);
+      
+      let imageUrl = "";
+      
+      // Upload image if provided
+      if (data.productImage) {
+        imageUrl = await uploadToCloudinary(data.productImage);
+      }
+      
+      // Prepare data for API
+      const productData = {
+        name: data.productName,
+        description: data.productDescription,
+        price: data.productPrice,
+        imageUrl: imageUrl
+      };
+      
+      // Send data to API
+      console.log("Product data to send:", productData);
+      
+      // If successful, close modal and reset form
+      reset();
+      setIsOpen(false);
+      
+      // You might want to add some success notification here
+      
+    } catch (error) {
+      console.error("Error submitting product:", error);
+      setError("Failed to add product. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -50,8 +106,8 @@ function Sellbutton() {
       </button>
 
       {isOpen && (
-        <div className={`${poppins.className} font-medium fixed inset-0 flex justify-center items-center bg-black bg-opacity-40 backdrop-blur-md`}>
-          <div className="bg-white/10 backdrop-blur-xl p-6 rounded-2xl shadow-lg border border-gray-500 w-[90%] md:w-[50%]">
+        <div className={`${poppins.className} font-medium fixed inset-0 flex justify-center items-center bg-black bg-opacity-40 backdrop-blur-md z-50`}>
+          <div className="bg-white/10 backdrop-blur-xl p-6 rounded-2xl shadow-lg border border-gray-500 w-full max-w-md md:w-2/3 lg:w-1/2">
             <h2 className="text-lg font-bold text-white">Add a Product</h2>
 
             <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
@@ -79,30 +135,41 @@ function Sellbutton() {
               />
               {errors.productPrice && <p className="text-red-500 text-sm">{errors.productPrice.message}</p>}
 
-              <input
-                type="file"
-                accept="image/*"
-                className="w-full text-sm mt-3 p-3 bg-transparent border border-gray-400 text-white rounded-lg focus:outline-none"
-                onChange={(e) => {
-                  if (e.target.files && e.target.files.length > 0) {
-                    setValue("productImage", e.target.files[0]);
-                  }
-                }}
-              />
+              <div className="w-full">
+                <label className="block text-sm text-gray-300 mb-1">Product Image</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="w-full text-sm p-3 bg-transparent border border-gray-400 text-white rounded-lg focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-blue-500 file:text-white hover:file:bg-blue-600"
+                  onChange={(e) => {
+                    if (e.target.files && e.target.files.length > 0) {
+                      setValue("productImage", e.target.files[0]);
+                    }
+                  }}
+                />
+              </div>
+
+              {error && <p className="text-red-500 text-sm">{error}</p>}
 
               <div className="flex justify-end mt-4 space-x-2">
                 <button
                   type="button"
                   className="px-4 py-2 bg-gray-600 text-base text-white rounded-lg hover:bg-gray-500 font-bold"
-                  onClick={() => setIsOpen(false)}
+                  onClick={() => {
+                    setIsOpen(false);
+                    reset();
+                    setError(null);
+                  }}
+                  disabled={isSubmitting}
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-green-600 text-white text-base rounded-lg hover:bg-green-500 font-bold"
+                  className="px-4 py-2 bg-green-600 text-white text-base rounded-lg hover:bg-green-500 font-bold disabled:opacity-50"
+                  disabled={isSubmitting}
                 >
-                  Add Product
+                  {isSubmitting ? "Adding..." : "Add Product"}
                 </button>
               </div>
             </form>
