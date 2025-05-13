@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { useEffect } from "react";
 import { Sparkles, Terminal, Users, X } from "lucide-react";
 import { Poppins } from "next/font/google";
 import { useForm, useFieldArray } from "react-hook-form";
@@ -15,7 +16,7 @@ const formSchema = z.object({
     .string()
     .min(50, "The description must be at least 50 characters"),
   roles: z
-    .array(z.string().min(1, "Role cannot be empty"))
+    .array(z.string().min(15, "Be a bit more detailed"))
     .min(1, "At least one role is required"),
 });
 
@@ -36,6 +37,7 @@ export default function EpicIdeaForm() {
     },
   });
 
+  
   const router = useRouter();
   const { fields, append, remove } = useFieldArray({
     control,
@@ -44,7 +46,7 @@ export default function EpicIdeaForm() {
 
   const onSubmit = async (data: FormData) => {
     console.log("🚀 Form submitted:", data);
-  
+
     try {
       const domain = await axios.get("http://localhost:4000/auth/email", {
         withCredentials: true,
@@ -55,26 +57,28 @@ export default function EpicIdeaForm() {
           name: data.name,
           description: data.description,
           roles: data.roles.map((role) => ({ roleName: role })),
-          domain:domain
+          domain: domain,
         },
         {
           withCredentials: true, // send cookies (if HttpOnly auth is used)
         }
       );
-  
+
       console.log("✅ Submitted successfully:", response.data);
       router.push("/featured/collab"); // Redirect to the gigs page
       // Optionally, you could show a toast or redirect the user
     } catch (error) {
-      console.error("❌ Submission failed:", error.response?.data || error.message);
+      console.error(
+        "❌ Submission failed:",
+        error.response?.data || error.message
+      );
       // Optionally, show a toast or an error message
     }
   };
-  
 
   return (
     <div
-      className={`mt-0  text-white flex flex-grow items-center justify-center px-4 py-6 ${poppins.className}`}
+      className={`mt-0 text-white flex flex-grow items-center justify-center px-4 py-6 ${poppins.className}`}
     >
       <div className="w-full max-w-3xl bg-gradient-to-br from-gray-900 to-gray-800 border border-gray-700/50 p-8 rounded-3xl shadow-[0_0_30px_#22d3ee33]">
         <h1 className="text-3xl md:text-4xl font-extrabold text-cyan-400 text-center tracking-tight mb-6 flex items-center justify-center gap-3">
@@ -133,17 +137,28 @@ export default function EpicIdeaForm() {
             <div className="space-y-3">
               {fields.map((field, index) => (
                 <div key={field.id} className="flex gap-2">
-                  <input
-                    {...register(`roles.${index}`)}
-                    type="text"
-                    placeholder="e.g. Dev, Designer, Strategist..."
-                    className="flex-1 p-3 bg-gray-900 border border-cyan-500/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-400/80 placeholder:text-cyan-300/40 transition duration-200"
-                  />
+                  <div className="flex-1">
+                    <div>
+                    <input
+                      {...register(`roles.${index}`)}
+                      type="text"
+                      placeholder="Describe the role in detail"
+                      className="w-full p-3 bg-gray-900 border border-cyan-500/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-400/80 placeholder:text-cyan-300/40 transition duration-200"
+                    />
+                    </div>
+                    {errors.roles && errors.roles[index] && (
+                      <p className="text-red-400 text-sm mt-1">
+                        {errors.roles[index]?.message}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Remove button */}
                   {fields.length > 1 && (
                     <button
                       type="button"
                       onClick={() => remove(index)}
-                      className="text-cyan-400 hover:text-red-500 transition"
+                      className="text-cyan-400 hover:text-red-500 transition mt-3"
                       title="Remove"
                     >
                       <X className="w-5 h-5" />
@@ -151,7 +166,9 @@ export default function EpicIdeaForm() {
                   )}
                 </div>
               ))}
-              {errors.roles && typeof errors.roles.message === "string" && (
+
+              {/* Array-level error */}
+              {errors.roles && !Array.isArray(errors.roles) && (
                 <p className="text-red-400 text-sm">{errors.roles.message}</p>
               )}
 
@@ -160,7 +177,7 @@ export default function EpicIdeaForm() {
                 onClick={() => append("")}
                 className="text-cyan-400 hover:text-cyan-300 text-sm font-medium underline mt-1"
               >
-                ➕ Add Another Role
+                ➕ Add a Role
               </button>
             </div>
           </div>

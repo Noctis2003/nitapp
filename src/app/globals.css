@@ -13,6 +13,10 @@
   }
 }
 
+* {
+  cursor: url('/cursor.png'), auto;
+}
+
 body {
   color: var(--foreground);
   background: var(--background);
