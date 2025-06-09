@@ -1,3 +1,4 @@
+// this is a client side page for now because it doesnt fetch anything in real time
 "use client"
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -15,7 +16,7 @@ const formSchema = z.object({
   productName: z.string().min(1, "Product name is required"),
   productDescription: z.string().min(1, "Description is required"),
   productPrice: z.string().min(1, "Price is required"),
-  productImage: z.instanceof(File).optional(),
+  productImage: z.instanceof(File),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -39,7 +40,7 @@ function Sellbutton() {
     try {
       const formData = new FormData();
       formData.append("file", file);
-      formData.append("upload_preset", "noctis_unsigned"); // Replace with your preset
+      formData.append("upload_preset", "noctis_unsigned"); 
       
       const res = await fetch(`https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`, {
         method: "POST",
@@ -51,6 +52,7 @@ function Sellbutton() {
       }
       
       const data = await res.json();
+      console.log(data.secure_url);
       return data.secure_url;
     } catch (error) {
       console.error("Error uploading to Cloudinary:", error);
@@ -75,12 +77,16 @@ function Sellbutton() {
         name: data.productName,
         description: data.productDescription,
         price: data.productPrice,
-        imageUrl: imageUrl
+        image: imageUrl
       };
       
       // Send data to API
-      console.log("Product data to send:", productData);
-      
+     const response = await axios.post(
+        "http://localhost:4000/shop/create",
+        productData,
+        { withCredentials: true } // Include credentials for authentication
+      );
+      console.log("Product added successfully:", response.data);
       // If successful, close modal and reset form
       reset();
       setIsOpen(false);

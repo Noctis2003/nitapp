@@ -31,7 +31,7 @@ export default function RootLayout({
       credentials: "include", // <== VERY IMPORTANT for sending cookies
     });
     console.log("Logged out successfully");
-    router.push("/auth/login"); // Navigate after logout
+    router.push("/"); // Navigate after logout
   };
 
   const handlers = useSwipeable({
