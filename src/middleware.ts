@@ -4,6 +4,17 @@ import { NextRequest, NextResponse } from 'next/server';
 export function middleware(request: NextRequest) {
   const token = request.cookies.get('jwt')?.value;
   const pathname = request.nextUrl.pathname;
+  const refreshToken = request.cookies.get('refresh_token')?.value;
+
+
+  if (!token && refreshToken) {
+    const refreshUrl =
+      process.env.NODE_ENV === 'development'
+        ? 'http://localhost:3000/auth/refresh'
+        : 'https://your-production-domain.com/auth/refresh';
+
+    return NextResponse.redirect(new URL(refreshUrl, request.url));
+  }
 
   // 🔁 If user is on the homepage `/` and has token, redirect to confessions
   if (pathname === '/' && token) {

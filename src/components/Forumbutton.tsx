@@ -3,7 +3,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
+import axios from '@/lib/axios';
 
 const formSchema = z.object({
   title: z.string().min(1, "Title is required"),

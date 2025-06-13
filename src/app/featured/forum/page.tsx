@@ -5,23 +5,24 @@ import { cookies } from "next/headers"; // ⭐ VERY IMPORTANT ⭐
 import { Poppins } from "next/font/google";
 import Paperpost from "@/components/Paperpost";
 import Forumbutton from "@/components/Forumbutton";
-import axios from "axios";
-
+import axios from '@/lib/axios';
+import Link from "next/link";
 const poppins = Poppins({
   subsets: ["latin"],
   weight: ["400", "500", "700"],
 });
 
 async function Page() {
-  const cookieStore = await cookies();  // 🌟 get cookies
-  const cookieString = cookieStore.toString(); // turn them into a string
-
+  const cookieStore = await cookies();  
+  const cookieString = cookieStore.toString(); 
+  
   const response = await axios.get("http://localhost:4000/forum/get", {
     headers: {
       Cookie: cookieString, // 👑 manually attach cookies
     },
 
   });
+
   return (
     <div className={`w-full flex flex-col flex-grow ${poppins.className} bg-gray-950 text-white xxs:mt-9 md:mt-0`}>
       <h1 className="w-full text-center text-5xl font-extrabold xxs:mt-6 md:mt-3">
@@ -37,14 +38,18 @@ async function Page() {
       
         {Array.isArray(response.data.data) ? (
           response.data.data.map((post) => (
+            
+           
             <Paperpost
               key={post.id}
+              id={post.id}
               title={post.title}
               description={`${post.description.substring(0, 100)}...`}
               name={post.user.email}
               date={post.createdAt}
-              likes={post.likes}
-              comments={post.comments}
+              likes={post.likes.length}
+              comments={post.comments.length}
+           
             />
           ))
         ) : (

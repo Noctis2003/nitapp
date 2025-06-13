@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import axios from "axios";
+import axios from '@/lib/axios';
 import { use } from 'react';
 import {Poppins} from "next/font/google";
 

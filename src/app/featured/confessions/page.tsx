@@ -10,7 +10,7 @@ import { useEffect, useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
+import axios from '@/lib/axios';
 import { Shadows_Into_Light } from "next/font/google";
 import { Patrick_Hand } from "next/font/google";
 
