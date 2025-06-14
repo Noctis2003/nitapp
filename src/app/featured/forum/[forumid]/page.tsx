@@ -1,45 +1,58 @@
 "use client";
-import React from 'react';
+import React, { use } from 'react';
 import { Poppins } from 'next/font/google';
-
+import { useEffect } from 'react';
+import { useState } from 'react';
+import axios from '@/lib/axios';
+import { formatDistanceToNow } from 'date-fns';
 const poppins = Poppins({
   subsets: ['latin'],
   weight: ['400', '500', '700'],
 });
-function Page({ params }: { params: { forumid: string } }) {
- 
-  const comments = [
-    {
-      id: 1,
-      username: 'mistri',
-      message: 'This app is really impressive! The UI feels super smooth and modern. Great job!',
-      timestamp: '2 hours ago'
-    },
-    {
-      id: 2,
-      username: 'devguru',
-      message: 'How did you handle authentication? Is it using NextAuth or something custom?',
-      timestamp: '1 hour ago'
-    },
-    {
-      id: 3,
-      username: 'codequeen',
-      message: 'I love the color scheme! Did you use Tailwind for all the styling?',
-      timestamp: '45 minutes ago'
-    },
-    {
-      id: 4,
-      username: 'student42',
-      message: 'Can you share more about the backend setup? Was NestJS easy to integrate?',
-      timestamp: '30 minutes ago'
-    },
-    {
-      id: 5,
-      username: 'mistri',
-      message: 'Thanks for the feedback everyone! Yes, Tailwind and NextAuth were both used. Happy to answer more questions!',
-      timestamp: '15 minutes ago'
+
+
+
+function Page({ params }: { params: { forumid: String } }) {
+  const { forumid } = use(params);
+  const [data, setData] = useState<any>(null);
+ const [comments, setComments] = useState<any>([]);
+
+
+
+
+useEffect(() => {
+  const fetchForumData = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:4000/forum/getsingle?id=${forumid}`,
+        { withCredentials: true }
+      );
+      setData(response.data);
+    } catch (error) {
+      console.error('Error fetching forum data:', error);
     }
-  ];
+  }
+
+  const fetchComments = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:4000/forum/comments?postId=1`,
+        { withCredentials: true }
+      );
+     
+      setComments(response.data.data);
+    } catch (error) {
+      console.error('Error fetching comments:', error);
+    }
+  }
+  console.log(comments.length);
+  fetchForumData();
+  fetchComments();
+ 
+}, []);
+
+
+  
 
   return (
     <div className={`min-h-screen  text-white ${poppins.className} `}>
@@ -53,13 +66,12 @@ function Page({ params }: { params: { forumid: string } }) {
            
             
             <h1 className="text-6xl md:text-6xl font-bold mb-6   leading-tight">
-              How did I make this app?
+              {data ? data.data.title : 'Loading...'}
             </h1>
             
             <div className="w-full mx-auto space-y-4">
               <p className="text-xl text-gray-300 leading-relaxed">
-                This app is built using Next.js, Tailwind CSS, and NestJS. It features a modern UI with smooth animations and a responsive design. The backend is powered by NestJS, providing a robust API for data handling.
-                 This app is built using Next.js, Tailwind CSS, and NestJS. It features a modern UI with smooth animations and a responsive design. The backend is powered by NestJS, providing a robust API for data handling. This app is built using Next.js, Tailwind CSS, and NestJS. It features a modern UI with smooth animations and a responsive design. The backend is powered by NestJS, providing a robust API for data handling. This app is built using Next.js, Tailwind CSS, and NestJS. It features a modern UI with smooth animations and a responsive design. The backend is powered by NestJS, providing a robust API for data handling. This app is built using Next.js, Tailwind CSS, and NestJS. It features a modern UI with smooth animations and a responsive design. The backend is powered by NestJS, providing a robust API for data handling. This app is built using Next.js, Tailwind CSS, and NestJS. It features a modern UI with smooth animations and a responsive design. The backend is powered by NestJS, providing a robust API for data handling.
+               {data ? data.data.description : 'Loading...'}
               </p>
             </div>
           </div>
@@ -77,7 +89,12 @@ function Page({ params }: { params: { forumid: string } }) {
               </h2>
             </div>
             
-            <div className="divide-y divide-gray-800/30">
+
+
+
+
+
+ <div className="divide-y divide-gray-800/30">
               {comments.map((comment, index) => (
                 <div 
                   key={comment.id}
@@ -89,24 +106,32 @@ function Page({ params }: { params: { forumid: string } }) {
                   <div className="flex items-start gap-4">
                     {/* Avatar */}
                     <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center text-white font-semibold text-sm flex-shrink-0">
-                      {comment.username.charAt(0).toUpperCase()}
+                      
                     </div>
                     
                     {/* Comment Content */}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-2">
                         <h3 className="text-blue-400 font-medium text-sm">
-                          @{comment.username}
+                          @{comment.user.email}
                         </h3>
                         <span className="text-gray-500 text-xs">•</span>
-                        <span className="text-gray-500 text-xs">{comment.timestamp}</span>
+                        <span className="text-gray-500 text-xs">{formatDistanceToNow(new Date(comment.createdAt), { addSuffix: true })}</span>
                       </div>
-                      <p className="text-gray-200 leading-relaxed">{comment.message}</p>
+                      <p className="text-gray-200 leading-relaxed">{comment.content}</p>
                     </div>
                   </div>
                 </div>
               ))}
             </div>
+
+
+
+
+
+
+
+          
             
             {/* Add Comment Button */}
             <div className="px-6 py-4 bg-gray-900/30 border-t border-gray-800/30">
@@ -119,7 +144,7 @@ function Page({ params }: { params: { forumid: string } }) {
           {/* Footer */}
           <div className="text-center mt-16">
             <p className="text-gray-500 text-sm">
-              Built with ❤️ and lots of ☕ • Open to feedback and collaboration
+              Built with ❤️ and lots of 🌿💨 Open to feedback and collaboration
             </p>
           </div>
         </div>

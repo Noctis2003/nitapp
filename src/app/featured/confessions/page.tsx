@@ -259,7 +259,7 @@ export default function ToiletWall() {
       </div>
 
       {showTextbox && (
-        <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center">
+        <div className="fixed inset-0 z-50 bg-black/60 flex items-center backdrop-blur-md justify-center">
           <div className="bg-gray-900 border border-white/20 rounded-xl p-6 w-96 shadow-xl">
             <form onSubmit={handleSubmit(onSubmit)}>
               <textarea
