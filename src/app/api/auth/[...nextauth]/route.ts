@@ -16,7 +16,9 @@ const handler = NextAuth({
 
     async signIn({ user, account, profile }) {
    
-     
+     console.log("User:", user);
+      console.log("Account:", account);
+      console.log("Profile:", profile);
       return true;
     },
 

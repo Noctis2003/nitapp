@@ -4,7 +4,10 @@ import { Poppins } from 'next/font/google';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import axios from '@/lib/axios';
-import { formatDistanceToNow } from 'date-fns';
+import z from 'zod';
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { formatDistanceToNow, set } from 'date-fns';
 const poppins = Poppins({
   subsets: ['latin'],
   weight: ['400', '500', '700'],
@@ -16,9 +19,40 @@ function Page({ params }: { params: { forumid: String } }) {
   const { forumid } = use(params);
   const [data, setData] = useState<any>(null);
  const [comments, setComments] = useState<any>([]);
+  const [open , setOpen] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
+  const formSchema = z.object({
+    content: z.string().min(1, "Content is required"),
+  });
+const onsubmit = async (data: FormData) => {
+console.log(data);
+setSubmitted(true);
+const response = await axios.post(
+  `http://localhost:4000/forum/comment`,
+  {
+    postId: Number(forumid),
+    content: data.content,
+  },
+  { withCredentials: true }
+);
 
+setSubmitted(false);
+setOpen(false);
+console.log(response.data);
 
+}
+  type FormData = z.infer<typeof formSchema>;
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormData>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      content: '',
+    },
+  });
 
 useEffect(() => {
   const fetchForumData = async () => {
@@ -33,10 +67,12 @@ useEffect(() => {
     }
   }
 
+
+
   const fetchComments = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:4000/forum/comments?postId=1`,
+        `http://localhost:4000/forum/comments?postId=${forumid}`,
         { withCredentials: true }
       );
      
@@ -135,12 +171,52 @@ useEffect(() => {
             
             {/* Add Comment Button */}
             <div className="px-6 py-4 bg-gray-900/30 border-t border-gray-800/30">
-              <button className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-medium py-3 px-4 rounded-xl transition-all duration-200 transform hover:scale-[1.02] hover:shadow-lg hover:shadow-purple-500/25">
+              <button onClick={()=>{
+                setOpen(true);
+              }} className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-medium py-3 px-4 rounded-xl transition-all duration-200 transform hover:scale-[1.02] hover:shadow-lg hover:shadow-purple-500/25">
                 💬 Join the conversation
               </button>
             </div>
           </div>
 
+
+       {open && (
+  <div className={`${poppins.className} font-medium fixed inset-0 flex justify-center items-center bg-black bg-opacity-40 backdrop-blur-md z-50`}>
+    <div className="bg-gray-900/50 border border-gray-800/50 backdrop-blur-2xl rounded-2xl p-8 w-full max-w-md shadow-2xl relative">
+      <h3 className="text-2xl font-semibold bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 bg-clip-text text-transparent mb-6 text-center">
+        💬 Join the Discussion
+      </h3>
+
+      <form onSubmit={handleSubmit(onsubmit)} className="space-y-4">
+        <textarea
+          {...register("content")}
+          placeholder="Write your comment..."
+          className="w-full h-32 resize-none p-4 rounded-xl bg-gray-800/70 text-gray-100 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-cyan-400 placeholder-gray-400"
+        />
+        {errors.content && (
+          <p className="text-sm text-red-400">{errors.content.message}</p>
+        )}
+
+        <div className="flex justify-between gap-4 mt-6">
+          <button
+            type="button"
+            onClick={() => setOpen(false)}
+            className="flex-1 py-2 rounded-xl bg-gray-700 hover:bg-gray-600 text-gray-300 transition-all duration-200"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            disabled={submitted}
+            className="flex-1 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-medium transition-all duration-200 disabled:opacity-50"
+          >
+            {submitted ? "Submitting..." : "Submit"}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+)}
           {/* Footer */}
           <div className="text-center mt-16">
             <p className="text-gray-500 text-sm">

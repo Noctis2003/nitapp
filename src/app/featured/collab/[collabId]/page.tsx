@@ -3,6 +3,10 @@ import { useState, useEffect } from "react";
 import axios from '@/lib/axios';
 import { use } from 'react';
 import { Poppins } from "next/font/google";
+import {z} from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { set } from "date-fns";
 
 const poppins = Poppins({ subsets: ["latin"], weight: ["300", "400", "500", "600", "700", "800"] });
 
@@ -12,6 +16,35 @@ function Page({ params }: { params: { collabId: string } }) {
   const [error, setError] = useState<string | null>(null);
   const [hoveredRole, setHoveredRole] = useState<number | null>(null);
   const { collabId } = use(params);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [open, setOpen] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [roleId, setRoleId] = useState<Number | null>(null);
+
+const applicationSchema = z.object({
+  message: z.string().min(1, "Message is required"),
+});
+
+type Formdata=z.infer<typeof applicationSchema>;
+
+const {
+  register,
+  handleSubmit,
+  formState: { errors },
+} = useForm<Formdata>({
+  resolver: zodResolver(applicationSchema),
+}
+);
+
+
+const onsubmit = async (data: Formdata) => {
+
+console.log(data);
+console.log(roleId);
+
+
+}
+
 
   useEffect(() => {
     const fetchCollab = async () => {
@@ -34,7 +67,7 @@ function Page({ params }: { params: { collabId: string } }) {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-950 flex items-center justify-center relative">
         <div className="relative">
           <div className="w-16 h-16 border-4 border-cyan-400 border-t-transparent rounded-full animate-spin"></div>
           <div className="absolute inset-0 w-16 h-16 border-4 border-pink-400 border-b-transparent rounded-full animate-spin animate-reverse"></div>
@@ -157,7 +190,7 @@ function Page({ params }: { params: { collabId: string } }) {
 
                   {/* Apply Button */}
                   <div className="relative overflow-hidden">
-                    <button className="w-full bg-gradient-to-r from-cyan-500 via-cyan-500 to-cyan-600 text-white py-4 px-8 rounded-xl font-bold tracking-wider transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-cyan-500/25 relative overflow-hidden group">
+                    <button onClick={() => {setOpen(true),setRoleId(role.id)}} className="w-full bg-gradient-to-r from-cyan-500 via-cyan-500 to-cyan-600 text-white py-4 px-8 rounded-xl font-bold tracking-wider transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-cyan-500/25 relative overflow-hidden group">
                       <span className={`relative z-10 ${poppins.className}`}>APPLY NOW</span>
                       <div className="absolute inset-0 bg-gradient-to-r from-cyan-600 via-cyan-500 to-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     </button>
@@ -182,6 +215,42 @@ function Page({ params }: { params: { collabId: string } }) {
           <div className="w-full h-px bg-gradient-to-r from-transparent via-cyan-400 to-transparent opacity-50"></div>
         </div>
       </div>
+
+        {open && (
+  <div className={`${poppins.className} font-medium fixed inset-0 flex justify-center items-center bg-black bg-opacity-40 backdrop-blur-md z-50`}>
+    <div className="bg-gray-900/80 border border-cyan-500/30 backdrop-blur-xl rounded-2xl p-8 w-full max-w-md shadow-lg relative">
+      <h3 className="text-xl font-bold text-cyan-400 mb-4 text-center">Apply for Role</h3>
+
+      <form onSubmit={handleSubmit(onsubmit)} className="space-y-4">
+        <textarea
+          {...register("message")}
+          placeholder="Why do you think you are the best fit?"
+          className="w-full h-32 resize-none p-4 rounded-xl bg-gray-800 text-gray-100 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+        />
+        {errors.message && (
+          <p className="text-sm text-red-400">{errors.message.message}</p>
+        )}
+
+        <div className="flex justify-between gap-4 mt-4">
+          <button
+            type="button"
+            onClick={() => setOpen(false)}
+            className="flex-1 py-2 rounded-xl bg-gray-700 text-gray-200 hover:bg-gray-600 transition"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            disabled={submitted}
+            className="flex-1 py-2 rounded-xl bg-cyan-500 text-white hover:bg-cyan-600 transition disabled:opacity-50"
+          >
+            {submitted ? "Submitting..." : "Submit"}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+)}
     </div>
   );
 }

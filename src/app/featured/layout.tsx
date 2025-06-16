@@ -75,20 +75,23 @@ export default function RootLayout({
       >
         <div className={`${poppins.className} h-full px-3 py-4 overflow-y-auto`}>
           <ul className="space-y-2 font-medium text-gray-300 flex flex-col gap-5 xxs:mt-20 md:mt-5">
-            <li>
+
+          <li>
               <button
-                onClick={logout}
+                onClick={() => router.push("/featured/profile")}
                 className="flex items-center p-2 rounded-lg hover:bg-gray-800 w-full text-left"
               >
                 <Image
-                  src="/Icons/logout.png"
-                  alt="logout"
-                  width={25}
-                  height={25}
+                  src="/Icons/profile.png"
+                  alt="collab"
+                  height={30}
+                  width={30}
                 />
-                <span className="ms-3 font-bold">Logout</span>
+                <span className="flex-1 ms-3 font-bold">Profile</span>
               </button>
             </li>
+
+           
             <li>
               <button
                 onClick={() => router.push("/featured/sell")}
@@ -143,6 +146,20 @@ export default function RootLayout({
                   width={30}
                 />
                 <span className="flex-1 ms-3 font-bold">Collab</span>
+              </button>
+            </li>
+            <li>
+              <button
+                onClick={logout}
+                className="flex items-center p-2 rounded-lg hover:bg-gray-800 w-full text-left"
+              >
+                <Image
+                  src="/Icons/logout.png"
+                  alt="logout"
+                  width={25}
+                  height={25}
+                />
+                <span className="ms-3 font-bold">Logout</span>
               </button>
             </li>
           </ul>
