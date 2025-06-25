@@ -2,7 +2,7 @@ import React from "react";
 import { Poppins } from "next/font/google";
 import Sellbutton from "@/components/Sellbutton";
 import { cookies } from 'next/headers';
-import axios from '@/lib/axios';
+import axios from 'axios'
 const poppins = Poppins({
   subsets: ["latin"],
   weight: ["400", "500", "700"], // Add the desired weights

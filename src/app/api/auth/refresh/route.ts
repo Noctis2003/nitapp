@@ -36,5 +36,9 @@ export async function GET(request: NextRequest) {
     secure: true,
   });
 
+// sameSite means that the cookie will only be sent in
+//  same-site requests, which means that the cookie will not be sent in cross-site requests
+// which means external links will not be able to access the cookie
+
   return response;
 }

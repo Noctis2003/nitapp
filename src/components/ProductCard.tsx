@@ -25,7 +25,7 @@ export default function ProductCard({name, price, description , image}: {name: s
       <h2 className="mt-3 text-lg font-semibold">{name}</h2>
       <p className="mt-2 text-lg font-bold text-green-400  ">{price}</p>
       <p className="text-gray-400 text-sm text-center mt-1 ">
-        {description}
+     {description.length > 100 ? description.slice(0, 100) + '...' : description}
       </p>
       
      

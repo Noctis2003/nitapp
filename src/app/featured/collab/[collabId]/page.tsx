@@ -6,16 +6,34 @@ import { Poppins } from "next/font/google";
 import {z} from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { set } from "date-fns";
+import { FC } from 'react';
+import { useParams } from "next/navigation";
 
 const poppins = Poppins({ subsets: ["latin"], weight: ["300", "400", "500", "600", "700", "800"] });
 
-function Page({ params }: { params: { collabId: string } }) {
+export interface Collab {
+  id: number;
+  name: string;
+  description: string;
+  roles?: Array<{
+    id: number;
+    roleName: string;
+    description: string;
+  }>;
+}
+
+interface Props {
+  collabId: string;
+}
+
+
+function Page() {
   const [collab, setCollab] = useState<Collab | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [hoveredRole, setHoveredRole] = useState<number | null>(null);
-  const { collabId } = use(params);
+ const params = useParams();
+  const { collabId } = params;
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -39,8 +57,36 @@ const {
 
 const onsubmit = async (data: Formdata) => {
 
-console.log(data);
-console.log(roleId);
+
+  try {
+    const response = await axios.post(`http://localhost:4000/collab/apply/`,
+  {
+    message: data.message,
+    roleId: roleId,
+  },
+  { withCredentials: true }
+)
+
+if (response.status === 200) {
+      setSubmitted(true);
+      setTimeout(() => {
+        setOpen(false);
+        setSubmitted(false);
+      }, 1000); 
+    }
+
+  } catch (error) {
+   
+    setSubmitted(false);
+    if (axios.isAxiosError(error)) {
+      setErrorMessage(error.response?.data?.error || "An error occurred while submitting your application.");
+    }
+    else {
+      setErrorMessage("An unexpected error occurred.");
+    }
+  }
+
+
 
 
 }
@@ -98,7 +144,7 @@ console.log(roleId);
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
         <div className="bg-gray-500/10 backdrop-blur-xl border border-gray-500/30 rounded-2xl p-8">
-          <div className={`text-gray-400 text-center ${orbitron.className} font-bold`}>
+          <div className={`text-gray-400 text-center font-bold`}>
             NO COLLABORATION FOUND
           </div>
         </div>
@@ -108,14 +154,14 @@ console.log(roleId);
 
   return (
     <div className="min-h-screen bg-gray-950 relative overflow-hidden">
-      {/* Animated Background Elements */}
+
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-cyan-500/5 rounded-full blur-3xl animate-pulse"></div>
         <div className="absolute top-3/4 right-1/4 w-96 h-96 bg-cyan-600/5 rounded-full blur-3xl animate-pulse delay-1000"></div>
         <div className="absolute top-1/2 left-1/2 w-48 h-48 bg-cyan-500/5 rounded-full blur-3xl animate-pulse delay-500"></div>
       </div>
 
-      {/* Grid Pattern Overlay */}
+   
       <div className="absolute inset-0 opacity-10">
         <div className="absolute inset-0" style={{
           backgroundImage: `
@@ -126,16 +172,15 @@ console.log(roleId);
         }}></div>
       </div>
 
-      <div className="relative z-10 max-w-6xl mx-auto px-6 py-12">
-        {/* Header Section */}
+      <div className="relative z-10 max-w-6xl  mx-auto px-6 py-12 max-md:w-full max-md:px-2">
+
         <div className="text-center mb-16">
-          <div className={`text-6xl md:text-6xl font-black mb-6 ${poppins.className} bg-gradient-to-r from-cyan-400 via-cyan-300 to-cyan-500 bg-clip-text text-transparent animate-pulse`}>
+          <div className={`xxs:text-4xl xxs:mt-8 md:text-6xl font-black mb-6 ${poppins.className} bg-gradient-to-r from-cyan-400 via-cyan-300 to-cyan-500 bg-clip-text text-transparent animate-pulse`}>
             {collab.name}
           </div>
           <div className="w-32 h-1 bg-gradient-to-r from-cyan-400 to-cyan-600 mx-auto rounded-full"></div>
         </div>
 
-        {/* Description Card */}
         <div className="mb-16 relative group">
           <div className="absolute -inset-1 bg-gradient-to-r from-cyan-400 via-cyan-500 to-cyan-600 rounded-3xl blur opacity-25 group-hover:opacity-40 transition duration-1000"></div>
           <div className="relative bg-gray-900/50 backdrop-blur-xl border border-cyan-500/30 rounded-3xl p-8 hover:border-cyan-500/50 transition-all duration-500">
@@ -151,7 +196,7 @@ console.log(roleId);
           </div>
         </div>
 
-        {/* Roles Section */}
+
         <div className="mb-8">
           <div className="flex items-center justify-center mb-12">
             <div className="w-12 h-1 bg-gradient-to-r from-transparent to-cyan-400 rounded-full"></div>
@@ -169,11 +214,11 @@ console.log(roleId);
                 onMouseEnter={() => setHoveredRole(index)}
                 onMouseLeave={() => setHoveredRole(null)}
               >
-                {/* Animated Border */}
+     
                 <div className="absolute -inset-1 bg-gradient-to-r from-cyan-400 via-cyan-500 to-cyan-600 rounded-2xl blur opacity-0 group-hover:opacity-30 transition duration-1000"></div>
                 
                 <div className="relative bg-gray-900/60 backdrop-blur-xl border border-gray-700/50 rounded-2xl p-8 hover:border-cyan-400/50 transition-all duration-500 transform hover:scale-105 hover:-translate-y-2">
-                  {/* Role Header */}
+        
                   <div className="flex items-center mb-4">
                     <div className={`w-2 h-2 rounded-full mr-3 transition-all duration-300 ${
                       hoveredRole === index ? 'bg-cyan-300 animate-pulse' : 'bg-cyan-400'
@@ -183,12 +228,11 @@ console.log(roleId);
                     </h3>
                   </div>
 
-                  {/* Role Description */}
+          
                   <p className={`text-gray-300 mb-8 leading-relaxed ${poppins.className} font-light`}>
                     {role.description}
                   </p>
 
-                  {/* Apply Button */}
                   <div className="relative overflow-hidden">
                     <button onClick={() => {setOpen(true),setRoleId(role.id)}} className="w-full bg-gradient-to-r from-cyan-500 via-cyan-500 to-cyan-600 text-white py-4 px-8 rounded-xl font-bold tracking-wider transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-cyan-500/25 relative overflow-hidden group">
                       <span className={`relative z-10 ${poppins.className}`}>APPLY NOW</span>
@@ -196,8 +240,7 @@ console.log(roleId);
                     </button>
                   </div>
 
-                  {/* Hover Effect Particles */}
-                  {hoveredRole === index && (
+                      {hoveredRole === index && (
                     <div className="absolute inset-0 pointer-events-none">
                       <div className="absolute top-4 right-4 w-1 h-1 bg-cyan-400 rounded-full animate-ping"></div>
                       <div className="absolute bottom-4 left-4 w-1 h-1 bg-cyan-300 rounded-full animate-ping delay-300"></div>
@@ -210,7 +253,7 @@ console.log(roleId);
           </div>
         </div>
 
-        {/* Footer Glow Effect */}
+  
         <div className="text-center mt-16">
           <div className="w-full h-px bg-gradient-to-r from-transparent via-cyan-400 to-transparent opacity-50"></div>
         </div>
@@ -229,6 +272,9 @@ console.log(roleId);
         />
         {errors.message && (
           <p className="text-sm text-red-400">{errors.message.message}</p>
+        )}
+        {errorMessage && (
+          <p className="text-sm text-red-400">{errorMessage}</p>
         )}
 
         <div className="flex justify-between gap-4 mt-4">

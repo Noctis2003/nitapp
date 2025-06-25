@@ -5,7 +5,7 @@ import { cookies } from "next/headers"; // ⭐ VERY IMPORTANT ⭐
 import { Poppins } from "next/font/google";
 import Paperpost from "@/components/Paperpost";
 import Forumbutton from "@/components/Forumbutton";
-import axios from '@/lib/axios';
+import axios from 'axios'
 import Link from "next/link";
 const poppins = Poppins({
   subsets: ["latin"],
@@ -37,7 +37,7 @@ async function Page() {
       <div className="h-full flex flex-col mt-5 xxs:ml-1 md:ml-12 space-y-4">
       
         {Array.isArray(response.data.data) ? (
-          response.data.data.map((post) => (
+          response.data.data.map((post:any) => (
             
            
             <Paperpost

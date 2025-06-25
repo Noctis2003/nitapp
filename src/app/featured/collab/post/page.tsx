@@ -6,7 +6,7 @@ import { Poppins } from "next/font/google";
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import axios from "axios";
+import axios, { Axios } from "axios";
 import { useRouter } from "next/navigation";
 const poppins = Poppins({ subsets: ["latin"], weight: "400" });
 
@@ -16,7 +16,7 @@ const formSchema = z.object({
     .string()
     .min(50, "The description must be at least 50 characters"),
   roles: z
-    .array(z.string().min(15, "Be a bit more detailed"))
+    .array(z.string().max(20, "Role must be 20 characters or less"))
     .min(1, "At least one role is required"),
 });
 
@@ -41,7 +41,7 @@ export default function EpicIdeaForm() {
   const router = useRouter();
   const { fields, append, remove } = useFieldArray({
     control,
-    name: "roles",
+    name: "roles" as never,
   });
 
   const onSubmit = async (data: FormData) => {
@@ -67,20 +67,25 @@ export default function EpicIdeaForm() {
       console.log("✅ Submitted successfully:", response.data);
       router.push("/featured/collab"); // Redirect to the gigs page
       // Optionally, you could show a toast or redirect the user
-    } catch (error) {
-      console.error(
-        "❌ Submission failed:",
-        error.response?.data || error.message
-      );
-      // Optionally, show a toast or an error message
+    } catch (error : unknown ) {
+      if (axios.isAxiosError(error)) {
+        
+        console.error("❌ Axios error:", error.response?.data || error.message);
+        alert(`Error: ${error.response?.data?.message || "Submission failed"}`);  
+      }
+      else {
+    
+        console.error("❌ Error:", error);
+        alert("An unexpected error occurred. Please try again later.");
+      }
     }
   };
 
   return (
     <div
-      className={`mt-0 text-white flex flex-grow items-center justify-center px-4 py-6 ${poppins.className}`}
+      className={`mt-0 text-white flex flex-grow items-center justify-center  py-6 w-full ${poppins.className}`}
     >
-      <div className="w-full max-w-3xl bg-gradient-to-br from-gray-900 to-gray-800 border border-gray-700/50 p-8 rounded-3xl shadow-[0_0_30px_#22d3ee33]">
+      <div className="w-full max-md:mt-10 max-w-3xl bg-gradient-to-br from-gray-900 to-gray-800 border border-gray-700/50 p-8 rounded-3xl shadow-[0_0_30px_#22d3ee33]">
         <h1 className="text-3xl md:text-4xl font-extrabold text-cyan-400 text-center tracking-tight mb-6 flex items-center justify-center gap-3">
           <Sparkles className="animate-bounce" />
           Submit a Mission Worth Building
@@ -117,7 +122,7 @@ export default function EpicIdeaForm() {
             <textarea
               {...register("description")}
               rows={4}
-              placeholder="What's the vision? How will it change lives, blow minds, or bend reality?"
+              placeholder="Describe your idea in detail. Describe roles and their responsibilites"
               className="w-full p-3 bg-gray-900 border border-cyan-500/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-400/80 placeholder:text-cyan-300/40 transition duration-200"
             />
             {errors.description && (

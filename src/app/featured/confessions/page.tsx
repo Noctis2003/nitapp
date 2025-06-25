@@ -38,25 +38,16 @@ function GraffitiLayer() {
   >([]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const domain = await axios.get("http://localhost:4000/auth/email", {
-        withCredentials: true,
-      });
-      console.log("Domain:", domain);
-      // Add the domain to the graffiti icons
+    // Add the domain to the graffiti icons
+    const newPositions = Array.from({ length: 50 }, () => ({
+      top: `${Math.floor(Math.random() * 100)}%`,
+      left: `${Math.floor(Math.random() * 100)}%`,
+      rotate: `${Math.floor(Math.random() * 360)}deg`,
+      emoji: graffitiIcons[Math.floor(Math.random() * graffitiIcons.length)],
+      size: `${Math.floor(Math.random() * 24) + 12}px`,
+    }));
 
-      const newPositions = Array.from({ length: 50 }, () => ({
-        top: `${Math.floor(Math.random() * 100)}%`,
-        left: `${Math.floor(Math.random() * 100)}%`,
-        rotate: `${Math.floor(Math.random() * 360)}deg`,
-        emoji: graffitiIcons[Math.floor(Math.random() * graffitiIcons.length)],
-        size: `${Math.floor(Math.random() * 24) + 12}px`,
-      }));
-  
-      setPositions(newPositions);
-    };
-  
-    fetchData();
+    setPositions(newPositions);
   }, []);
   
   return (
@@ -81,11 +72,11 @@ function GraffitiLayer() {
 
 export default function ToiletWall() {
   const [showTextbox, setShowTextbox] = useState(false);
+  // Initialize notes as an empty array instead of undefined
   const [notes, setNotes] = useState<Note[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
   
- 
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
   const carouselRef = useRef<HTMLDivElement>(null);
@@ -93,10 +84,15 @@ export default function ToiletWall() {
 
   // Check if device is mobile on component mount
   useEffect(() => {
-    setIsMobile(window.innerWidth <= 768);
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    // Check on mount
+    checkMobile();
     
     const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768);
+      checkMobile();
     };
     
     window.addEventListener('resize', handleResize);
@@ -115,12 +111,23 @@ export default function ToiletWall() {
   useEffect(() => {
     const fetchNotes = async () => {
       try {
-        const res = await axios.get("http://localhost:4000/gossip/get");
+        const res = await axios.get("http://localhost:4000/gossip/get", {
+          withCredentials: true,
+          headers: { "Content-Type": "application/json" },
+        });
         console.log("Fetched notes:", res.data.data);
-        setNotes(res.data.data);
+        
+        // Ensure we always set an array, even if API returns null/undefined
+        const fetchedNotes = Array.isArray(res.data.data) ? res.data.data : [];
+        setNotes(fetchedNotes);
+        
+        // Reset current index if notes array is empty
+        if (fetchedNotes.length === 0) {
+          setCurrentIndex(0);
+        }
       } catch (error) {
         console.error("Failed to fetch notes:", error);
-        setNotes([]);
+        setNotes([]); // Ensure we always have an array
       } finally {
         setLoading(false);
       }
@@ -130,12 +137,14 @@ export default function ToiletWall() {
   }, []);
 
   const nextSlide = () => {
-    if (notes.length === 0) return;
+    // Add null check for notes
+    if (!notes || notes.length === 0) return;
     setCurrentIndex((prevIndex) => (prevIndex + 1) % notes.length);
   };
 
   const prevSlide = () => {
-    if (notes.length === 0) return;
+    // Add null check for notes
+    if (!notes || notes.length === 0) return;
     setCurrentIndex((prevIndex) => (prevIndex - 1 + notes.length) % notes.length);
   };
 
@@ -155,7 +164,7 @@ export default function ToiletWall() {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [notes.length]); // Re-add listener if notes length changes
+  }, [notes]); // Re-add listener if notes changes
 
   // Handle touch events for mobile swipe
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -192,7 +201,7 @@ export default function ToiletWall() {
       });
 
       // Add the new note to the list and navigate to it
-      const updatedNotes = [...notes, { content: data.content }];
+      const updatedNotes = [...(notes || []), { content: data.content }];
       setNotes(updatedNotes);
       setCurrentIndex(updatedNotes.length - 1);
       reset();
@@ -203,14 +212,14 @@ export default function ToiletWall() {
 
   return (
     <div
-      className={`${poppins.className} min-h-screen text-white  xxs::px-0 xxs:py-6  md:p-6 relative overflow-hidden mt-3`}
+      className={`${poppins.className} min-h-screen text-white xxs::px-0 xxs:py-6 md:p-6 relative overflow-hidden mt-3`}
     >
       <GraffitiLayer />
 
       <h1 className="xxs:mt-10 md:mt-4 text-3xl font-bold mb-6 text-center">🧻 Gossip Wall </h1>
 
       {/* Add a hint about navigation based on device */}
-      {!loading && notes.length > 0 && (
+      {!loading && notes && notes.length > 0 && (
         <p className="text-center text-white/50 text-sm mb-4">
           {isMobile 
             ? "Swipe left or right to navigate between secrets" 
@@ -226,12 +235,12 @@ export default function ToiletWall() {
       </button>
 
       {/* Carousel Container */}
-      <div className="relative md:max-w-2xl mx-auto mt-10 h-auto xxs:w-full  ">
+      <div className="relative md:max-w-2xl mx-auto mt-10 h-auto xxs:w-full">
         {loading ? (
           <div className="flex items-center justify-center h-full">
             <p className="text-center text-white/70 text-xl">Loading juicy secrets...</p>
           </div>
-        ) : notes.length === 0 ? (
+        ) : !notes || notes.length === 0 ? (
           <div className="flex items-center justify-center h-full">
             <p className="text-center text-white/70 text-xl">No secrets yet! Be the first to share.</p>
           </div>
@@ -248,7 +257,10 @@ export default function ToiletWall() {
               <div 
                 className="bg-gray-950 rounded-xl p-6 shadow-lg w-full h-full flex items-center justify-center transition-all duration-300"
               >
-                <p className={`${shadows.className} text-2xl text-center`}>{notes[currentIndex].content}</p>
+                {/* Add bounds checking for currentIndex */}
+                <p className={`${shadows.className} text-2xl text-center`}>
+                  {notes[currentIndex]?.content || "Content not available"}
+                </p>
               </div>
             </div>
             

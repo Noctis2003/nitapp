@@ -3,45 +3,46 @@ import React, { use } from 'react';
 import { Poppins } from 'next/font/google';
 import { useEffect } from 'react';
 import { useState } from 'react';
-import axios from '@/lib/axios';
+import axios from 'axios'
 import z from 'zod';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { formatDistanceToNow, set } from 'date-fns';
+import { useParams } from 'next/navigation';
+
 const poppins = Poppins({
   subsets: ['latin'],
   weight: ['400', '500', '700'],
 });
 
-
-
-function Page({ params }: { params: { forumid: String } }) {
-  const { forumid } = use(params);
+function Page() {
+  const { forumid } = useParams();
   const [data, setData] = useState<any>(null);
- const [comments, setComments] = useState<any>([]);
+  const [comments, setComments] = useState<any>([]);
   const [open , setOpen] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
   const formSchema = z.object({
     content: z.string().min(1, "Content is required"),
   });
-const onsubmit = async (data: FormData) => {
-console.log(data);
-setSubmitted(true);
-const response = await axios.post(
-  `http://localhost:4000/forum/comment`,
-  {
-    postId: Number(forumid),
-    content: data.content,
-  },
-  { withCredentials: true }
-);
 
-setSubmitted(false);
-setOpen(false);
-console.log(response.data);
+  const onsubmit = async (data: FormData) => {
+    console.log(data);
+    setSubmitted(true);
+    const response = await axios.post(
+      `http://localhost:4000/forum/comment`,
+      {
+        postId: Number(forumid),
+        content: data.content,
+      },
+      { withCredentials: true }
+    );
 
-}
+    setSubmitted(false);
+    setOpen(false);
+    console.log(response.data);
+  }
+
   type FormData = z.infer<typeof formSchema>;
   const {
     register,
@@ -54,172 +55,156 @@ console.log(response.data);
     },
   });
 
-useEffect(() => {
-  const fetchForumData = async () => {
-    try {
-      const response = await axios.get(
-        `http://localhost:4000/forum/getsingle?id=${forumid}`,
-        { withCredentials: true }
-      );
-      setData(response.data);
-    } catch (error) {
-      console.error('Error fetching forum data:', error);
+  useEffect(() => {
+    const fetchForumData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:4000/forum/getsingle?id=${forumid}`,
+          { withCredentials: true }
+        );
+        setData(response.data);
+      } catch (error) {
+        console.error('Error fetching forum data:', error);
+      }
     }
-  }
 
-
-
-  const fetchComments = async () => {
-    try {
-      const response = await axios.get(
-        `http://localhost:4000/forum/comments?postId=${forumid}`,
-        { withCredentials: true }
-      );
-     
-      setComments(response.data.data);
-    } catch (error) {
-      console.error('Error fetching comments:', error);
+    const fetchComments = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:4000/forum/comments?postId=${forumid}`,
+          { withCredentials: true }
+        );
+       
+        setComments(response.data.data);
+      } catch (error) {
+        console.error('Error fetching comments:', error);
+      }
     }
-  }
-  console.log(comments.length);
-  fetchForumData();
-  fetchComments();
- 
-}, []);
-
-
-  
+    console.log(comments.length);
+    fetchForumData();
+    fetchComments();
+   
+  }, []);
 
   return (
-    <div className={`min-h-screen  text-white ${poppins.className} `}>
+    <div className={`min-h-screen text-white ${poppins.className}`}>
       {/* Background decoration */}
-      <div className="absolute inset-0 "></div>
+      <div className="absolute inset-0"></div>
       
-      <div className="relative z-10 flex flex-col items-center px-4 py-12">
+      <div className="relative z-10 flex flex-col items-center  lg:px-8 py-6 sm:py-8 lg:py-12">
         <div className="w-full max-w-4xl">
           {/* Header Section */}
-          <div className="text-center mb-16">
-           
-            
-            <h1 className="text-6xl md:text-6xl font-bold mb-6   leading-tight">
+          <div className="text-center mb-6 sm:mb-8 lg:mb-12 max-md:mt-10">
+            <h1 className="text-xl xs:text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold mb-3 sm:mb-4 lg:mb-6 leading-tight break-words px-2">
               {data ? data.data.title : 'Loading...'}
             </h1>
             
-            <div className="w-full mx-auto space-y-4">
-              <p className="text-xl text-gray-300 leading-relaxed">
+            <div className="w-full mx-auto space-y-3 sm:space-y-4">
+              <p className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-300 leading-relaxed px-3 sm:px-2 break-words">
                {data ? data.data.description : 'Loading...'}
               </p>
             </div>
           </div>
 
-  
           {/* Comments Section */}
-          <div className="bg-gray-900/50 backdrop-blur-sm border border-gray-800/50 rounded-2xl overflow-hidden shadow-2xl">
-            <div className="bg-gradient-to-r from-purple-900/20 to-blue-900/20 px-6 py-4 border-b border-gray-800/50">
-              <h2 className="text-xl font-semibold text-white flex items-center gap-2">
-                <div className="w-3 h-3 bg-green-400 rounded-full"></div>
-                Community Feedback
-                <span className="ml-2 bg-gray-800 text-gray-300 text-xs px-2 py-1 rounded-full">
+          <div className="bg-gray-900/50 backdrop-blur-sm border border-gray-800/50 rounded-lg sm:rounded-xl lg:rounded-2xl overflow-hidden shadow-2xl mx-2 sm:mx-0">
+            <div className="bg-gradient-to-r from-purple-900/20 to-blue-900/20 px-3 sm:px-4 lg:px-6 py-3 sm:py-4 border-b border-gray-800/50">
+              <h2 className="text-base sm:text-lg lg:text-xl font-semibold text-white flex flex-col xs:flex-row xs:items-center gap-2">
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 bg-green-400 rounded-full flex-shrink-0"></div>
+                  <span className="break-words">Community Feedback</span>
+                </div>
+                <span className="bg-gray-800 text-gray-300 text-xs px-2 py-1 rounded-full self-start xs:ml-2 flex-shrink-0">
                   {comments.length} comments
                 </span>
               </h2>
             </div>
             
-
-
-
-
-
- <div className="divide-y divide-gray-800/30">
-              {comments.map((comment, index) => (
+            <div className="divide-y divide-gray-800/30">
+              {comments.map((comment:any, index:any) => (
                 <div 
                   key={comment.id}
-                  className="px-6 py-5 hover:bg-gray-800/30 transition-colors duration-200"
+                  className="px-3 sm:px-4 lg:px-6 py-4 sm:py-5 hover:bg-gray-800/30 transition-colors duration-200"
                   style={{ 
                     animation: `fadeInUp 0.6s ease-out ${index * 150}ms both`
                   }}
                 >
-                  <div className="flex items-start gap-4">
+                  <div className="flex items-start gap-3 sm:gap-4">
                     {/* Avatar */}
-                    <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center text-white font-semibold text-sm flex-shrink-0">
-                      
-                    </div>
+                  
                     
                     {/* Comment Content */}
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-2">
-                        <h3 className="text-blue-400 font-medium text-sm">
+                    <div className="flex-1 min-w-0 overflow-hidden">
+                      <div className="flex flex-col xs:flex-row xs:items-center gap-1 xs:gap-2 mb-2">
+                        <h3 className="text-blue-400 font-medium text-xs sm:text-sm truncate">
                           @{comment.user.email}
                         </h3>
-                        <span className="text-gray-500 text-xs">•</span>
-                        <span className="text-gray-500 text-xs">{formatDistanceToNow(new Date(comment.createdAt), { addSuffix: true })}</span>
+                        <span className="text-gray-500 text-xs hidden xs:inline flex-shrink-0">•</span>
+                        <span className="text-gray-500 text-xs flex-shrink-0">
+                          {formatDistanceToNow(new Date(comment.createdAt), { addSuffix: true })}
+                        </span>
                       </div>
-                      <p className="text-gray-200 leading-relaxed">{comment.content}</p>
+                      <p className="text-gray-200 leading-relaxed text-sm sm:text-base break-words overflow-wrap-anywhere">
+                        {comment.content}
+                      </p>
                     </div>
                   </div>
                 </div>
               ))}
             </div>
-
-
-
-
-
-
-
-          
             
             {/* Add Comment Button */}
-            <div className="px-6 py-4 bg-gray-900/30 border-t border-gray-800/30">
-              <button onClick={()=>{
-                setOpen(true);
-              }} className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-medium py-3 px-4 rounded-xl transition-all duration-200 transform hover:scale-[1.02] hover:shadow-lg hover:shadow-purple-500/25">
+            <div className="px-3 sm:px-4 lg:px-6 py-4 bg-gray-900/30 border-t border-gray-800/30">
+              <button 
+                onClick={() => setOpen(true)} 
+                className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-medium py-3 px-4 rounded-lg sm:rounded-xl transition-all duration-200 transform hover:scale-[1.02] hover:shadow-lg hover:shadow-purple-500/25 text-sm sm:text-base"
+              >
                 💬 Join the conversation
               </button>
             </div>
           </div>
 
+          {open && (
+            <div className={`${poppins.className} font-medium fixed inset-0 flex justify-center items-center bg-black bg-opacity-40 backdrop-blur-md z-50 p-3 sm:p-4`}>
+              <div className="bg-gray-900/50 border border-gray-800/50 backdrop-blur-2xl rounded-lg sm:rounded-xl lg:rounded-2xl p-4 sm:p-6 lg:p-8 w-full max-w-xs xs:max-w-sm sm:max-w-md shadow-2xl relative mx-2">
+                <h3 className="text-lg sm:text-xl lg:text-2xl font-semibold bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 bg-clip-text text-transparent mb-4 sm:mb-6 text-center break-words">
+                  💬 Join the Discussion
+                </h3>
 
-       {open && (
-  <div className={`${poppins.className} font-medium fixed inset-0 flex justify-center items-center bg-black bg-opacity-40 backdrop-blur-md z-50`}>
-    <div className="bg-gray-900/50 border border-gray-800/50 backdrop-blur-2xl rounded-2xl p-8 w-full max-w-md shadow-2xl relative">
-      <h3 className="text-2xl font-semibold bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 bg-clip-text text-transparent mb-6 text-center">
-        💬 Join the Discussion
-      </h3>
+                <form onSubmit={handleSubmit(onsubmit)} className="space-y-4">
+                  <textarea
+                    {...register("content")}
+                    placeholder="Write your comment..."
+                    className="w-full h-24 sm:h-28 lg:h-32 resize-none p-3 sm:p-4 rounded-lg sm:rounded-xl bg-gray-800/70 text-gray-100 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-cyan-400 placeholder-gray-400 text-sm sm:text-base"
+                  />
+                  {errors.content && (
+                    <p className="text-sm text-red-400 break-words">{errors.content.message}</p>
+                  )}
 
-      <form onSubmit={handleSubmit(onsubmit)} className="space-y-4">
-        <textarea
-          {...register("content")}
-          placeholder="Write your comment..."
-          className="w-full h-32 resize-none p-4 rounded-xl bg-gray-800/70 text-gray-100 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-cyan-400 placeholder-gray-400"
-        />
-        {errors.content && (
-          <p className="text-sm text-red-400">{errors.content.message}</p>
-        )}
+                  <div className="flex flex-col xs:flex-row justify-between gap-3 sm:gap-4 mt-4 sm:mt-6">
+                    <button
+                      type="button"
+                      onClick={() => setOpen(false)}
+                      className="flex-1 py-2.5 sm:py-2 rounded-lg sm:rounded-xl bg-gray-700 hover:bg-gray-600 text-gray-300 transition-all duration-200 text-sm sm:text-base"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={submitted}
+                      className="flex-1 py-2.5 sm:py-2 rounded-lg sm:rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-medium transition-all duration-200 disabled:opacity-50 text-sm sm:text-base"
+                    >
+                      {submitted ? "Submitting..." : "Submit"}
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          )}
 
-        <div className="flex justify-between gap-4 mt-6">
-          <button
-            type="button"
-            onClick={() => setOpen(false)}
-            className="flex-1 py-2 rounded-xl bg-gray-700 hover:bg-gray-600 text-gray-300 transition-all duration-200"
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            disabled={submitted}
-            className="flex-1 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-medium transition-all duration-200 disabled:opacity-50"
-          >
-            {submitted ? "Submitting..." : "Submit"}
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
-)}
           {/* Footer */}
-          <div className="text-center mt-16">
-            <p className="text-gray-500 text-sm">
+          <div className="text-center mt-8 sm:mt-12 lg:mt-16 px-4">
+            <p className="text-gray-500 text-xs sm:text-sm break-words">
               Built with ❤️ and lots of 🌿💨 Open to feedback and collaboration
             </p>
           </div>
@@ -236,6 +221,17 @@ useEffect(() => {
             opacity: 1;
             transform: translateY(0);
           }
+        }
+        
+        /* Custom breakpoint for extra small screens */
+        @media (min-width: 475px) {
+          .xs\\:text-2xl { font-size: 1.5rem; line-height: 2rem; }
+          .xs\\:flex-row { flex-direction: row; }
+          .xs\\:items-center { align-items: center; }
+          .xs\\:gap-2 { gap: 0.5rem; }
+          .xs\\:ml-2 { margin-left: 0.5rem; }
+          .xs\\:inline { display: inline; }
+          .xs\\:max-w-sm { max-width: 24rem; }
         }
       `}</style>
     </div>

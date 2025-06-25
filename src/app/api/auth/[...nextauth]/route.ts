@@ -1,7 +1,17 @@
+// i will tell you how this works
+// what we do here is we are implementing NExtAuth with Google authentication
+// for that we had to get google client id and secret from the google developer console
+// this is mainly a work around i took for google account verification
+// so that we can use the google account to login and register users
 
+// the actual login and registration is handled by the backend
+// so we are just using the google account to verify the user and then we can use the
+// backend to handle the rest of the authentication process
+// you will be redirected to a page called /auth/sync
+// this redirection is done by the middleware
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
-import axios from "axios";
+
 const handler = NextAuth({
   providers: [
     GoogleProvider({

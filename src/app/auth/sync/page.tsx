@@ -1,15 +1,18 @@
 "use client";
+// here the useSession hook is used to get the session data
+// and the actual loggin and registration is handled by the backend in here
 
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import axios from '@/lib/axios';
 import { Poppins } from "next/font/google";
-import { cookies } from "next/headers"; 
+
 const poppins = Poppins({
   subsets: ["latin"],
   weight: ["400", "500", "700"],
 });
+
 export default function SyncPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
@@ -58,15 +61,21 @@ export default function SyncPage() {
     if (status === 'authenticated') {
       syncWithBackend();
     } else if (status === 'unauthenticated') {
-      router.push('/auth/login');
+      router.push('/');
     }
   }, [status, session, router]);
 
   return (
-    <div className={`flex items-center justify-center h-screen bg-gray-950 ${poppins.className}`}>
-      <h1 className="text-5xl font-bold text-white">
-        Noctis welcomes you
+    <div className={`flex items-center justify-center min-h-screen bg-gray-950 px-4 py-8 ${poppins.className}`}>
+      <div className="text-center max-w-4xl mx-auto">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white leading-tight">
+          Noctis welcomes you
         </h1>
+        {/* Optional: Add a subtle loading indicator */}
+        <div className="mt-8 flex justify-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white opacity-50"></div>
+        </div>
+      </div>
     </div>
   );
 }
