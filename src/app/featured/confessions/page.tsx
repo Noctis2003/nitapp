@@ -4,17 +4,18 @@
 // when right key is pressed we call the nextSlide function
 // prevslide function is just a function that decrements the current index by 1 
 // and nextSlide function increments the current index by 1
+// 
 "use client";
 import { Poppins } from "next/font/google";
 import { useEffect, useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from '@/lib/axios';
+import axios from 'axios';
 import { Shadows_Into_Light } from "next/font/google";
-import { Patrick_Hand } from "next/font/google";
 
-const patrick = Patrick_Hand({ subsets: ["latin"], weight: "400" });
+
+
 const shadows = Shadows_Into_Light({ subsets: ["latin"], weight: "400" });
 const poppins = Poppins({ subsets: ["latin"], weight: ["400", "500", "700"] });
 
@@ -111,7 +112,7 @@ export default function ToiletWall() {
   useEffect(() => {
     const fetchNotes = async () => {
       try {
-        const res = await axios.get("http://localhost:4000/gossip/get", {
+        const res = await axios.get("https://nitappbackend.onrender.com/gossip/get", {
           withCredentials: true,
           headers: { "Content-Type": "application/json" },
         });
@@ -164,6 +165,7 @@ export default function ToiletWall() {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [notes]); // Re-add listener if notes changes
 
   // Handle touch events for mobile swipe
@@ -194,7 +196,7 @@ export default function ToiletWall() {
   const onSubmit = async (data: NoteFormData) => {
     try {
       setShowTextbox(false);
-      const res = await axios.post("http://localhost:4000/gossip/create", {
+     await axios.post("https://nitappbackend.onrender.com/gossip/create", {
         content: data.content,
       }, {
         withCredentials: true,

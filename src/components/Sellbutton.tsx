@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Poppins } from "next/font/google";
-import axios from '@/lib/axios'; // Adjust the import path as necessary
+import axios from 'axios'; // Adjust the import path as necessary
 
 const poppins = Poppins({
   subsets: ["latin"],

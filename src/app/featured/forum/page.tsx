@@ -6,17 +6,30 @@ import { Poppins } from "next/font/google";
 import Paperpost from "@/components/Paperpost";
 import Forumbutton from "@/components/Forumbutton";
 import axios from 'axios'
-import Link from "next/link";
+
+
 const poppins = Poppins({
   subsets: ["latin"],
   weight: ["400", "500", "700"],
 });
 
+export type Post = {
+  id: string;
+  title: string;
+  description: string;
+  user: {
+    email: string;
+  };
+  createdAt: string;
+  likes: [];
+  comments: [];
+};
+
 async function Page() {
   const cookieStore = await cookies();  
   const cookieString = cookieStore.toString(); 
   
-  const response = await axios.get("http://localhost:4000/forum/get", {
+  const response = await axios.get("https://nitappbackend.onrender.com/forum/get", {
     headers: {
       Cookie: cookieString, // 👑 manually attach cookies
     },
@@ -37,7 +50,7 @@ async function Page() {
       <div className="h-full flex flex-col mt-5 xxs:ml-1 md:ml-12 space-y-4">
       
         {Array.isArray(response.data.data) ? (
-          response.data.data.map((post:any) => (
+          response.data.data.map((post:Post) => (
             
            
             <Paperpost

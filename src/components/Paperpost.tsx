@@ -1,13 +1,13 @@
 "use client";
-import React, { use } from "react";
+import React from "react";
 import { ThumbsUp } from 'lucide-react';
 import { MessageCircle } from 'lucide-react';
 import Link from "next/link";
-import axios from '@/lib/axios';
+import axios from 'axios';
 import { useEffect } from "react";
-import { set } from "date-fns";
 
-function Paperpost({id , name, description, date, comments, likes,title}:{id:string , name: string, description: string, date: string, comments: number, likes: number, title: string}) {
+
+function Paperpost({id , name, description, comments, likes,title}:{id:string , name: string, description: string, date: string, comments: number, likes: number, title: string}) {
   const [likesCount, setLikesCount] = React.useState(likes);
   const [liked, setLiked] = React.useState(false);
   const [isAnimating, setIsAnimating] = React.useState(false);

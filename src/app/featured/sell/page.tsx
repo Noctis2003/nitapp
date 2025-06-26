@@ -2,20 +2,27 @@ import React from "react";
 import { Poppins } from "next/font/google";
 import Sellbutton from "@/components/Sellbutton";
 import { cookies } from 'next/headers';
-import axios from 'axios'
+
 const poppins = Poppins({
   subsets: ["latin"],
   weight: ["400", "500", "700"], // Add the desired weights
 });
 import ProductCard from "@/components/ProductCard";
 
+export type Product = {
+  id: number;
+  name: string;
+  price: number;
+  description: string;
+  image: string;
+};
 
 async function page() {
 
   const cookieStore = cookies();
   const token = (await cookieStore).get('jwt')?.value;
   const refreshToken = (await cookieStore).get('refresh_token')?.value;
-  const res= await fetch("http://localhost:4000/shop/all", {
+  const res= await fetch("https://nitappbackend.onrender.com/shop/all", {
     method: "GET",
     headers: {
       'cookie': `jwt=${token}; refresh_token=${refreshToken}`,
@@ -33,7 +40,7 @@ const products = await res.json();
         <Sellbutton/>
       </h1>
       <div className={` flex flex-grow flex-wrap xxs:flex-col md:flex-row  ${products.length===1 ? 'md:justify-start':'md:justify-between'} `} >
-        {products.map((product: any) => (
+        {products.map((product: Product) => (
           <ProductCard
             key={product.id}
             name={product.name}

@@ -1,12 +1,12 @@
 "use client";
 import { useState, useEffect } from "react";
-import axios from '@/lib/axios';
-import { use } from 'react';
+import axios from 'axios';
+
 import { Poppins } from "next/font/google";
 import {z} from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { FC } from 'react';
+;
 import { useParams } from "next/navigation";
 
 const poppins = Poppins({ subsets: ["latin"], weight: ["300", "400", "500", "600", "700", "800"] });
@@ -22,9 +22,7 @@ export interface Collab {
   }>;
 }
 
-interface Props {
-  collabId: string;
-}
+
 
 
 function Page() {
@@ -37,7 +35,7 @@ function Page() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const [roleId, setRoleId] = useState<Number | null>(null);
+  const [roleId, setRoleId] = useState<number | null>(null);
 
 const applicationSchema = z.object({
   message: z.string().min(1, "Message is required"),
@@ -59,7 +57,7 @@ const onsubmit = async (data: Formdata) => {
 
 
   try {
-    const response = await axios.post(`http://localhost:4000/collab/apply/`,
+    const response = await axios.post(`https://nitappbackend.onrender.com/collab/apply/`,
   {
     message: data.message,
     roleId: roleId,
@@ -96,7 +94,7 @@ if (response.status === 200) {
     const fetchCollab = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:4000/collab/collabs/?id=${collabId}`,
+          `https://nitappbackend.onrender.com/collab/collabs/?id=${collabId}`,
           { withCredentials: true }
         );
         setCollab(response.data);
@@ -234,7 +232,7 @@ if (response.status === 200) {
                   </p>
 
                   <div className="relative overflow-hidden">
-                    <button onClick={() => {setOpen(true),setRoleId(role.id)}} className="w-full bg-gradient-to-r from-cyan-500 via-cyan-500 to-cyan-600 text-white py-4 px-8 rounded-xl font-bold tracking-wider transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-cyan-500/25 relative overflow-hidden group">
+                    <button onClick={() => {setOpen(true);setRoleId(role.id); }} className="w-full bg-gradient-to-r from-cyan-500 via-cyan-500 to-cyan-600 text-white py-4 px-8 rounded-xl font-bold tracking-wider transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-cyan-500/25 relative overflow-hidden group">
                       <span className={`relative z-10 ${poppins.className}`}>APPLY NOW</span>
                       <div className="absolute inset-0 bg-gradient-to-r from-cyan-600 via-cyan-500 to-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     </button>

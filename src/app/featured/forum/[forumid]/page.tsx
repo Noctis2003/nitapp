@@ -1,5 +1,5 @@
 "use client";
-import React, { use } from 'react';
+import React from 'react';
 import { Poppins } from 'next/font/google';
 import { useEffect } from 'react';
 import { useState } from 'react';
@@ -7,21 +7,32 @@ import axios from 'axios'
 import z from 'zod';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { formatDistanceToNow, set } from 'date-fns';
+import { formatDistanceToNow } from 'date-fns';
 import { useParams } from 'next/navigation';
+
 
 const poppins = Poppins({
   subsets: ['latin'],
   weight: ['400', '500', '700'],
 });
 
+
+
 function Page() {
   const { forumid } = useParams();
-  const [data, setData] = useState<any>(null);
-  const [comments, setComments] = useState<any>([]);
+  
+  const [comments, setComments] = useState<Comment[]>([]);
   const [open , setOpen] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [data, setData] = useState<ForumData | null>(null);
 
+type ForumData = {
+  data: {
+    title: string;
+    description: string;
+  };
+}
+  
   const formSchema = z.object({
     content: z.string().min(1, "Content is required"),
   });
@@ -30,7 +41,7 @@ function Page() {
     console.log(data);
     setSubmitted(true);
     const response = await axios.post(
-      `http://localhost:4000/forum/comment`,
+      `https://nitappbackend.onrender.com/forum/comment`,
       {
         postId: Number(forumid),
         content: data.content,
@@ -55,11 +66,21 @@ function Page() {
     },
   });
 
+ type Comment = {
+    id: number;
+    content: string;
+    user: {
+      email: string;
+    };
+    createdAt: string;
+  };
+
+
   useEffect(() => {
     const fetchForumData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:4000/forum/getsingle?id=${forumid}`,
+          `https://nitappbackend.onrender.com/forum/getsingle?id=${forumid}`,
           { withCredentials: true }
         );
         setData(response.data);
@@ -71,7 +92,7 @@ function Page() {
     const fetchComments = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:4000/forum/comments?postId=${forumid}`,
+          `https://nitappbackend.onrender.com/forum/comments?postId=${forumid}`,
           { withCredentials: true }
         );
        
@@ -83,7 +104,7 @@ function Page() {
     console.log(comments.length);
     fetchForumData();
     fetchComments();
-   
+   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -96,7 +117,7 @@ function Page() {
           {/* Header Section */}
           <div className="text-center mb-6 sm:mb-8 lg:mb-12 max-md:mt-10">
             <h1 className="text-xl xs:text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold mb-3 sm:mb-4 lg:mb-6 leading-tight break-words px-2">
-              {data ? data.data.title : 'Loading...'}
+              {data? data.data.title : 'Loading...'}
             </h1>
             
             <div className="w-full mx-auto space-y-3 sm:space-y-4">
@@ -121,7 +142,7 @@ function Page() {
             </div>
             
             <div className="divide-y divide-gray-800/30">
-              {comments.map((comment:any, index:any) => (
+              {comments.map((comment:Comment, index:number) => (
                 <div 
                   key={comment.id}
                   className="px-3 sm:px-4 lg:px-6 py-4 sm:py-5 hover:bg-gray-800/30 transition-colors duration-200"

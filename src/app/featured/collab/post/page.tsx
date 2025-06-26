@@ -1,12 +1,11 @@
 "use client";
-import { useState } from "react";
-import { useEffect } from "react";
+
 import { Sparkles, Terminal, Users, X } from "lucide-react";
 import { Poppins } from "next/font/google";
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import axios, { Axios } from "axios";
+import axios from "axios";
 import { useRouter } from "next/navigation";
 const poppins = Poppins({ subsets: ["latin"], weight: "400" });
 
@@ -48,11 +47,11 @@ export default function EpicIdeaForm() {
     console.log("🚀 Form submitted:", data);
 
     try {
-      const domain = await axios.get("http://localhost:4000/auth/email", {
+      const domain = await axios.get("https://nitappbackend.onrender.com/auth/email", {
         withCredentials: true,
       });
       const response = await axios.post(
-        "http://localhost:4000/collab/create",
+        "https://nitappbackend.onrender.com/collab/create",
         {
           name: data.name,
           description: data.description,
@@ -92,8 +91,9 @@ export default function EpicIdeaForm() {
         </h1>
 
         <p className="text-gray-400 text-center mb-6 max-w-xl mx-auto text-base">
-          This isn't just an idea. It's the spark. The world will remember where
-          it began.
+          Share your epic idea and assemble a team to bring it to life. Describe
+          your vision.
+         
         </p>
 
         <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>

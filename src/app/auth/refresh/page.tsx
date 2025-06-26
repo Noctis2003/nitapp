@@ -1,8 +1,8 @@
 import { redirect } from 'next/navigation';
-
+import {cookies} from 'next/headers';
 export default async function Page() {
-  const cookies = require('next/headers').cookies();
-  const token = cookies.get('accessToken');
+const cookieStore = cookies();
+  const token =  (await cookieStore).get('accessToken')?.value;
 
   if (!token) {
     redirect('/api/auth/refresh'); // Will refresh and redirect back

@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { Poppins } from "next/font/google";
-import { Link } from "lucide-react";
+
 
 const poppins = Poppins({
   subsets: ["latin"],

@@ -5,7 +5,7 @@
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
-import axios from '@/lib/axios';
+import axios from 'axios';
 import { Poppins } from "next/font/google";
 
 const poppins = Poppins({
@@ -24,13 +24,13 @@ export default function SyncPage() {
       const email = session.user.email.toLowerCase();
 
       try {
-        const existingUser = await axios.get('http://localhost:4000/auth/exists', {
+        const existingUser = await axios.get('https://nitappbackend.onrender.com/auth/exists', {
           params: { email },
         });
 
         if (existingUser.data) {
           const response = await axios.post(
-            'http://localhost:4000/auth/login',
+            'https://nitappbackend.onrender.com/auth/login',
             { email },
             {
               withCredentials: true,
@@ -40,7 +40,7 @@ export default function SyncPage() {
           console.log("Login response:", response.data);
         } else {
           await axios.post(
-            'http://localhost:4000/auth/register',
+            'https://nitappbackend.onrender.com/auth/register',
             {
               email: session.user.email,
               username: session.user.name,

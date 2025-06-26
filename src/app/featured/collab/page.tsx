@@ -1,7 +1,7 @@
 // This page shows collabs in a beautiful, card-like layout
 "use client";
 import { useEffect, useState } from "react";
-import axios from '@/lib/axios';
+import axios from 'axios';
 import { Poppins } from "next/font/google";
 import { useRouter } from "next/navigation";
 
@@ -28,7 +28,7 @@ export default function CollabListPage() {
     const fetchCollabs = async () => {
       try {
         setLoading(true);
-        const response = await axios.get("http://localhost:4000/collab/get", {
+        const response = await axios.get("https://nitappbackend.onrender.com/collab/get", {
           withCredentials: true,
           params: { scope: localOnly },
         });

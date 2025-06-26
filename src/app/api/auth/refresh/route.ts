@@ -1,3 +1,4 @@
+// this is pretty easy
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
@@ -7,7 +8,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(new URL('/login', request.url));
   }
 
-  const res = await fetch("http://localhost:4000/auth/refresh", {
+  const res = await fetch("https://nitappbackend.onrender.com/auth/refresh", {
     method: "GET",
     headers: {
       'cookie': `refresh_token=${refreshToken}`,
@@ -25,14 +26,14 @@ export async function GET(request: NextRequest) {
   response.cookies.set('jwt', access_token, {
     httpOnly: true,
     path: '/',
-    sameSite: 'strict',
+    sameSite: 'none',
     secure: true,
   });
 
   response.cookies.set('refresh_token', refresh_token, {
     httpOnly: true,
     path: '/',
-    sameSite: 'strict',
+    sameSite: 'none',
     secure: true,
   });
 

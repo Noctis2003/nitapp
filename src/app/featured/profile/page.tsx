@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { ChevronDown, ChevronUp, Trash2, User, Mail, Briefcase, Megaphone, FileText, MessageCircle } from 'lucide-react';
 import axios from 'axios';
 import { Send } from 'lucide-react'
-import { set, formatDistanceToNow } from "date-fns";
+import {  formatDistanceToNow } from "date-fns";
 
 export type Role = {
   id: number;
@@ -28,8 +28,8 @@ export type ForumPost = {
   description: string;
   createdAt: string;
   userId: number;
-  likes: any[]; // Add likes property
-  comments: any[]; // Add comments property
+  likes: []; // Add likes property
+  comments: ForumComment[]; // Add comments property
 };
 
 export type ForumComment = {
@@ -56,7 +56,7 @@ export type User = {
   email: string;
   createdAt: string;
   refreshToken: string;
-  collabApplications: any[];
+  collabApplications: application[];
   collabGigs: CollabGig[];
   forumPosts: ForumPost[];
   forumComments: ForumComment[];
@@ -87,7 +87,7 @@ function ProfilePage() {
     const fetchUserData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get("http://localhost:4000/user/all", {
+        const response = await axios.get("https://nitappbackend.onrender.com/user/all", {
           withCredentials: true,
         });
 
@@ -99,7 +99,7 @@ function ProfilePage() {
     };
 
     fetchUserData();
-
+// eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
 
@@ -144,37 +144,37 @@ function ProfilePage() {
     }));
   };
 
-  const deleteGig = async (id: any) => {
+  const deleteGig = async (id: number) => {
     console.log("Deleting gig with id:", id);
     setGigs(prev => prev.filter(gig => gig.id !== id));
-    const response = await axios.delete(`http://localhost:4000/collab/collab?id=${id}`, {
+    const response = await axios.delete(`https://nitappbackend.onrender.com/collab/collab?id=${id}`, {
       withCredentials: true
     }
     )
     console.log("the response is", response);
   };
 
-  const deleteAd = async (id: Number) => {
+  const deleteAd = async (id: number) => {
     setAds(prev => prev.filter(ad => ad.id !== id));
-    const response = await axios.delete(`http://localhost:4000/shop/delete?id=${id}`, {
+    await axios.delete(`https://nitappbackend.onrender.com/shop/delete?id=${id}`, {
       withCredentials: true
     }
     )
   };
 
-  const deletePost = async (id: Number) => {
+  const deletePost = async (id: number) => {
     setPosts(prev => prev.filter(post => post.id !== id));
-    const response = await axios.delete(`http://localhost:4000/forum/delete?id=${id}`, {
+    const response = await axios.delete(`https://nitappbackend.onrender.com/forum/delete?id=${id}`, {
       withCredentials: true
     }
     )
     console.log("the response is", response);
   };
 
-  const deleteComment = async (id: Number) => {
+  const deleteComment = async (id: number) => {
     setComments(prev => prev.filter(comment => comment.id !== id));
     try {
-      const response = await axios.delete(`http://localhost:4000/forum/comment/delete?id=${id}`, {
+      const response = await axios.delete(`https://nitappbackend.onrender.com/forum/comment/delete?id=${id}`, {
         withCredentials: true
       });
       console.log("Comment deletion response:", response);
@@ -183,10 +183,10 @@ function ProfilePage() {
     }
   };
 
-  const deleteApplication = async (id: Number) => {
+  const deleteApplication = async (id: number) => {
     setApplications(prev => prev.filter(comment => comment.id !== id));
     try {
-      const response = await axios.delete(`http://localhost:4000/collab/collab?id=${id}`, {
+      const response = await axios.delete(`https://nitappbackend.onrender.com/collab/collab?id=${id}`, {
         withCredentials: true
       });
       console.log("Comment deletion response:", response);
@@ -195,16 +195,7 @@ function ProfilePage() {
     }
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'Active': return 'text-green-400';
-      case 'Completed': return 'text-blue-400';
-      case 'In Progress': return 'text-yellow-400';
-      case 'Paused': return 'text-red-400';
-      default: return 'text-gray-400';
-    }
-  };
-
+  
   // Extract applications with context
   const extractApplications = (gigs: CollabGig[]) => {
     const allApplications = [] as application[];
