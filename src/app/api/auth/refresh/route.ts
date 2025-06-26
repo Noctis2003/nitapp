@@ -28,6 +28,7 @@ export async function GET(request: NextRequest) {
     path: '/',
     sameSite: 'none',
     secure: true,
+     maxAge: 60 * 60 * 24 * 7
   });
 
   response.cookies.set('refresh_token', refresh_token, {
@@ -35,6 +36,7 @@ export async function GET(request: NextRequest) {
     path: '/',
     sameSite: 'none',
     secure: true,
+     maxAge: 60 * 60 * 24 * 7
   });
 
 // sameSite means that the cookie will only be sent in
