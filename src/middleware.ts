@@ -11,7 +11,7 @@ export function middleware(request: NextRequest) {
     const refreshUrl =
       process.env.NODE_ENV === 'development'
         ? 'http://localhost:3000/auth/refresh'
-        : 'https://your-production-domain.com/auth/refresh';
+        : 'https://nitapp-ysdi.vercel.app/auth/refresh';
 
     return NextResponse.redirect(new URL(refreshUrl, request.url));
   }
@@ -21,7 +21,7 @@ export function middleware(request: NextRequest) {
     const redirectTo =
       process.env.NODE_ENV === 'development'
         ? 'http://localhost:3000/featured/confessions'
-        : 'https://your-production-domain.com/featured/confessions';
+        : 'https://nitapp-ysdi.vercel.app/featured/confessions';
 
     return NextResponse.redirect(redirectTo);
   }
@@ -31,7 +31,7 @@ export function middleware(request: NextRequest) {
     const loginUrl =
       process.env.NODE_ENV === 'development'
         ? 'http://localhost:3000'
-        : 'https://your-production-domain.com';
+        : 'https://nitapp-ysdi.vercel.app';
 
     return NextResponse.redirect(new URL(loginUrl, request.url));
   }

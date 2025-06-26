@@ -31,7 +31,7 @@ function Forumbutton() {
       setIsSubmitting(true);
       setErrorMsg("");
       
-      const res = await axios.post("http://localhost:4000/forum/create", data, {
+      const res = await axios.post("https://nitappbackend.onrender.com/forum/create", data, {
         headers: {
           "Content-Type": "application/json",
         },

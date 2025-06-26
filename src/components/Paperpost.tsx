@@ -16,7 +16,7 @@ function Paperpost({id , name, description, comments, likes,title}:{id:string , 
     const checkIfLiked = async () => {
       try {
         const response = await axios.post(
-          `http://localhost:4000/forum/liked`,
+          `https://nitappbackend.onrender.com/forum/liked`,
           { postId: Number(id) }, // body
           { withCredentials: true } // config
         );
@@ -35,7 +35,7 @@ function Paperpost({id , name, description, comments, likes,title}:{id:string , 
     setTimeout(() => setIsAnimating(false), 600);
     
     try {
-      const response = await axios.post(`http://localhost:4000/forum/like`, {
+      const response = await axios.post(`https://nitappbackend.onrender.com/forum/like`, {
         postId: Number(id),
       }, { withCredentials: true });
     
