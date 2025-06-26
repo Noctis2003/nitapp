@@ -1,6 +1,5 @@
 // This is a server component
 // one must never quit
-"use client";
 import React from "react";
 import { cookies } from "next/headers"; // ⭐ VERY IMPORTANT ⭐
 import { Poppins } from "next/font/google";
