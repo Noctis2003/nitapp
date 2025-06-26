@@ -8,6 +8,7 @@ import { useEffect } from 'react';
 import axios from 'axios';
 import { Poppins } from "next/font/google";
 
+
 const poppins = Poppins({
   subsets: ["latin"],
   weight: ["400", "500", "700"],
@@ -38,6 +39,10 @@ export default function SyncPage() {
             }
           );
           console.log("Login response:", response.data);
+
+          // Set cookies manually if needed
+          
+
         } else {
           await axios.post(
             'https://nitappbackend.onrender.com/auth/register',
