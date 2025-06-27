@@ -1,5 +1,6 @@
 // This is a server component
 // one must never quit
+
 import React from "react";
 import { cookies } from "next/headers"; // ⭐ VERY IMPORTANT ⭐
 import { Poppins } from "next/font/google";
@@ -30,7 +31,6 @@ async function Page() {
   const cookieString = cookieStore.toString(); 
   
   const response = await axios.get("https://nitappbackend.onrender.com/forum/get", {
-       withCredentials: true,
     headers: {
       Cookie: cookieString, // 👑 manually attach cookies
     },
