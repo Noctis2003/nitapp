@@ -3,7 +3,6 @@
 "use client"; // ⭐ VERY IMPORTANT ⭐
 
 import React from "react";
-import { cookies } from "next/headers"; // ⭐ VERY IMPORTANT ⭐
 import { Poppins } from "next/font/google";
 import Paperpost from "@/components/Paperpost";
 import Forumbutton from "@/components/Forumbutton";
@@ -28,15 +27,13 @@ export type Post = {
 };
 
 async function Page() {
-  const cookieStore = await cookies();  
-  const cookieString = cookieStore.toString(); 
+
+
   
   const response = await axios.get("https://nitappbackend.onrender.com/forum/get", 
     {
     withCredentials: true, 
-      headers: {
-      Cookie: cookieString, // 👑 manually attach cookies
-    },
+   
 
     
   });
