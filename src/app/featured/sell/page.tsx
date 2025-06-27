@@ -1,7 +1,7 @@
 import React from "react";
 import { Poppins } from "next/font/google";
 import Sellbutton from "@/components/Sellbutton";
-import { cookies } from 'next/headers';
+import axios from "axios";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -19,19 +19,16 @@ export type Product = {
 
 async function page() {
 
-  const cookieStore = cookies();
-  const token = (await cookieStore).get('jwt')?.value;
-  const refreshToken = (await cookieStore).get('refresh_token')?.value;
-  const res= await fetch("https://nitappbackend.onrender.com/shop/all", {
-    method: "GET",
+ 
+ 
+ 
+  const response = await axios.get("https://nitappbackend.onrender.com/shop/all", {
     headers: {
-      'cookie': `jwt=${token}; refresh_token=${refreshToken}`,
       "Content-Type": "application/json",
-      
     },
-    
+    withCredentials: true, 
   });
-const products = await res.json();
+  const products: Product[] = response.data;
 
   return (
     <div className={`w-full   ${poppins.className} flex flex-col  xxs:mt-8 md:mt-0 flex-grow`}>

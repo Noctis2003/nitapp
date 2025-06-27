@@ -30,10 +30,11 @@ async function Page() {
   const cookieString = cookieStore.toString(); 
   
   const response = await axios.get("https://nitappbackend.onrender.com/forum/get", {
+       withCredentials: true,
     headers: {
       Cookie: cookieString, // 👑 manually attach cookies
     },
-
+    
   });
 
   return (
