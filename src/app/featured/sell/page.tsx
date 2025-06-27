@@ -44,7 +44,7 @@ export default function Page() {
       </h1>
       <div
         className={`flex flex-grow flex-wrap xxs:flex-col md:flex-row ${
-          products.length === 1 ? "md:justify-start" : "md:justify-between"
+          products.length === 1 ? "md:justify-start" : "md:justify-evenly"
         }`}
       >
         {products.map((product: Product) => (
