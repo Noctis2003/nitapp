@@ -1,5 +1,6 @@
 // This is a server component
 // one must never quit
+"use client"; // ⭐ VERY IMPORTANT ⭐
 
 import React from "react";
 import { cookies } from "next/headers"; // ⭐ VERY IMPORTANT ⭐
@@ -30,10 +31,13 @@ async function Page() {
   const cookieStore = await cookies();  
   const cookieString = cookieStore.toString(); 
   
-  const response = await axios.get("https://nitappbackend.onrender.com/forum/get", {
-    headers: {
+  const response = await axios.get("https://nitappbackend.onrender.com/forum/get", 
+    {
+    withCredentials: true, 
+      headers: {
       Cookie: cookieString, // 👑 manually attach cookies
     },
+
     
   });
 
