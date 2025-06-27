@@ -1,13 +1,10 @@
-// This is a server component
-// one must never quit
 "use client"; // ⭐ VERY IMPORTANT ⭐
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Poppins } from "next/font/google";
 import Paperpost from "@/components/Paperpost";
 import Forumbutton from "@/components/Forumbutton";
-import axios from 'axios'
-
+import axios from "axios";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -26,20 +23,36 @@ export type Post = {
   comments: [];
 };
 
-async function Page() {
+const Page = () => {
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const response = await axios.get(
+          "https://nitappbackend.onrender.com/forum/get",
+          {
+            withCredentials: true,
+          }
+        );
+        setPosts(response.data.data);
+      } catch (err) {
+        setError("Failed to fetch posts.");
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  
-  const response = await axios.get("https://nitappbackend.onrender.com/forum/get", 
-    {
-    withCredentials: true, 
-   
-
-    
-  });
+    fetchPosts();
+  }, []);
 
   return (
-    <div className={`w-full flex flex-col flex-grow ${poppins.className} bg-gray-950 text-white xxs:mt-9 md:mt-0`}>
+    <div
+      className={`w-full flex flex-col flex-grow ${poppins.className} bg-gray-950 text-white xxs:mt-9 md:mt-0`}
+    >
       <h1 className="w-full text-center text-5xl font-extrabold xxs:mt-6 md:mt-3">
         Daily Feed
       </h1>
@@ -49,12 +62,14 @@ async function Page() {
       >
         You can post whatever you want. <Forumbutton />
       </div>
+
       <div className="h-full flex flex-col mt-5 xxs:ml-1 md:ml-12 space-y-4">
-      
-        {Array.isArray(response.data.data) ? (
-          response.data.data.map((post:Post) => (
-            
-           
+        {loading ? (
+          <p className="text-center text-gray-400">Loading...</p>
+        ) : error ? (
+          <p className="text-center text-red-400">{error}</p>
+        ) : posts.length > 0 ? (
+          posts.map((post: Post) => (
             <Paperpost
               key={post.id}
               id={post.id}
@@ -64,7 +79,6 @@ async function Page() {
               date={post.createdAt}
               likes={post.likes.length}
               comments={post.comments.length}
-           
             />
           ))
         ) : (
@@ -73,6 +87,6 @@ async function Page() {
       </div>
     </div>
   );
-}
+};
 
 export default Page;
