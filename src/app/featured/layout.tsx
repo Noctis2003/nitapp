@@ -26,7 +26,7 @@ export default function RootLayout({
   };
 
   const logout = async () => {
-    await fetch("https://nitappbackend.onrender.com/auth/logout", {
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`, {
       method: "POST",
       credentials: "include", // <== VERY IMPORTANT for sending cookies
     });

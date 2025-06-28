@@ -4,15 +4,19 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from 'axios';
-
+import usePostStore from "@/store/usePostStore";
+import { add } from "date-fns";
 const formSchema = z.object({
   title: z.string().min(1, "Title is required"),
   description: z.string().min(1, "Description is required"),
 });
 
+
 type FormData = z.infer<typeof formSchema>;
 
 function Forumbutton() {
+
+const { addPost } = usePostStore(); // Import the addPost function from the store
   const {
     register,
     handleSubmit,
@@ -31,12 +35,26 @@ function Forumbutton() {
       setIsSubmitting(true);
       setErrorMsg("");
       
-      const res = await axios.post("https://nitappbackend.onrender.com/forum/create", data, {
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/forum/create`, data, {
         headers: {
           "Content-Type": "application/json",
         },
         withCredentials: true, // important for HttpOnly cookies
       });
+
+      addPost({ // Add the new post to the store
+        id: res.data.id,
+        title: data.title,
+        description: data.description,
+        user: {
+          email: res.data.user.email,
+        },
+        createdAt: add(new Date(), { hours: 3 }).toISOString(), // Adjusted to current time
+        likes: [],
+        comments: [],
+      });
+      // Add the new post to the store
+      
       console.log("Post created:", res.data);
       reset();
       setIsOpen(false);
@@ -44,6 +62,8 @@ function Forumbutton() {
       setErrorMsg("Something went wrong while posting. Try again!");
       console.error("Post error:", error);
     } finally {
+      // Add the new post to the store
+   
       setIsSubmitting(false);
     }
   };

@@ -13,7 +13,7 @@ export default function BackgroundLinesDemo() {
     <BackgroundLines className="flex items-center justify-center w-full flex-col px-4">
       <h2 className="bg-clip-text text-transparent text-center bg-gradient-to-b from-neutral-900 to-neutral-700 dark:from-neutral-600 dark:to-white text-7xl md:text-7xl lg:text-7xl font-sans py-2 md:py-10 relative z-20 font-bold tracking-tight">
       
-      <button className="w-auto h-auto" onClick={() => signIn('google', { callbackUrl: 'https://nitapp-ysdi.vercel.app/auth/sync' })} >
+      <button className="w-auto h-auto" onClick={() => signIn('google', { callbackUrl: `http://localhost:3000/auth/sync` })} >
       <ColourfulText  text="Click me" />
       </button>
       

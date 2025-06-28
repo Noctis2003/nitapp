@@ -25,6 +25,7 @@ function Page() {
   const [open , setOpen] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [data, setData] = useState<ForumData | null>(null);
+  const [loading, setLoading] = useState(true);
 
 type ForumData = {
   data: {
@@ -38,10 +39,11 @@ type ForumData = {
   });
 
   const onsubmit = async (data: FormData) => {
+    
     console.log(data);
     setSubmitted(true);
     const response = await axios.post(
-      `https://nitappbackend.onrender.com/forum/comment`,
+      `${process.env.NEXT_PUBLIC_API_URL}/forum/comment`,
       {
         postId: Number(forumid),
         content: data.content,
@@ -50,6 +52,7 @@ type ForumData = {
     );
 
     setSubmitted(false);
+    
     setOpen(false);
     console.log(response.data);
   }
@@ -77,22 +80,24 @@ type ForumData = {
 
 
   useEffect(() => {
-    const fetchForumData = async () => {
+    const fetchForumData = async () => {  
       try {
+        
         const response = await axios.get(
-          `https://nitappbackend.onrender.com/forum/getsingle?id=${forumid}`,
+          `${process.env.NEXT_PUBLIC_API_URL}/forum/getsingle?id=${forumid}`,
           { withCredentials: true }
         );
         setData(response.data);
       } catch (error) {
         console.error('Error fetching forum data:', error);
       }
+      
     }
 
     const fetchComments = async () => {
       try {
         const response = await axios.get(
-          `https://nitappbackend.onrender.com/forum/comments?postId=${forumid}`,
+          `${process.env.NEXT_PUBLIC_API_URL}/forum/comments?postId=${forumid}`,
           { withCredentials: true }
         );
        
@@ -102,10 +107,43 @@ type ForumData = {
       }
     }
     console.log(comments.length);
-    fetchForumData();
-    fetchComments();
+
+    const execute = async () => {
+      try {
+        setLoading(true);
+        await fetchForumData();
+        await fetchComments();
+      }
+      catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+  
+   execute();
    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+
+if (loading) {
+    return (
+      <div className={`min-h-screen bg-gray-950 text-white flex items-center justify-center w-full ${poppins.className}`}>
+        <div className="flex flex-col items-center space-y-6">
+          <div className="relative">
+            <div className="w-16 h-16 border-4 border-gray-800 border-t-yellow-500 rounded-full animate-spin"></div>
+            <div className="absolute inset-0 w-16 h-16 border-4 border-transparent border-t-yellow-400 rounded-full animate-spin animation-delay-150"></div>
+          </div>
+          <div className="text-center">
+            <h3 className="text-xl font-semibold text-yellow-400 mb-2">Loading comments</h3>
+            <p className="text-gray-400">I hope you like my app</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+
 
   return (
     <div className={`min-h-screen text-white ${poppins.className}`}>

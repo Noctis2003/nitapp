@@ -16,6 +16,7 @@ import { Shadows_Into_Light } from "next/font/google";
 
 
 
+
 const shadows = Shadows_Into_Light({ subsets: ["latin"], weight: "400" });
 const poppins = Poppins({ subsets: ["latin"], weight: ["400", "500", "700"] });
 
@@ -112,7 +113,8 @@ export default function ToiletWall() {
   useEffect(() => {
     const fetchNotes = async () => {
       try {
-        const res = await axios.get("https://nitappbackend.onrender.com/gossip/get", {
+        setLoading(true);
+        const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/gossip/get`, {
           withCredentials: true,
           headers: { "Content-Type": "application/json" },
         });
@@ -196,7 +198,7 @@ export default function ToiletWall() {
   const onSubmit = async (data: NoteFormData) => {
     try {
       setShowTextbox(false);
-     await axios.post("https://nitappbackend.onrender.com/gossip/create", {
+     await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/gossip/create`, {
         content: data.content,
       }, {
         withCredentials: true,
@@ -211,6 +213,24 @@ export default function ToiletWall() {
       console.error("Error posting note:", error);
     }
   };
+
+  if (loading) {
+    return (
+      <div className={`min-h-screen bg-gray-950 text-white flex items-center justify-center w-full ${poppins.className}`}>
+        <div className="flex flex-col items-center space-y-6">
+          <div className="relative">
+            <div className="w-16 h-16 border-4 border-gray-800 border-t-pink-400 rounded-full animate-spin"></div>
+            <div className="absolute inset-0 w-16 h-16 border-4 border-transparent border-t-pink-400 rounded-full animate-spin animation-delay-150"></div>
+          </div>
+          <div className="text-center">
+            <h3 className="text-xl font-semibold text-pink-400 mb-2">Finding confessions</h3>
+            <p className="text-gray-400">Thanks for being patient</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
 
   return (
     <div

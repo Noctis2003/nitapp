@@ -25,13 +25,13 @@ export default function SyncPage() {
       const email = session.user.email.toLowerCase();
 
       try {
-        const existingUser = await axios.get('https://nitappbackend.onrender.com/auth/exists', {
+        const existingUser = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/auth/exists`, {
           params: { email },
         });
 
         if (existingUser.data) {
           const response = await axios.post(
-            'https://nitappbackend.onrender.com/auth/login',
+            `${process.env.NEXT_PUBLIC_API_URL}/auth/login`,
             { email },
             {
               withCredentials: true,
@@ -45,7 +45,7 @@ export default function SyncPage() {
 
         } else {
           await axios.post(
-            'https://nitappbackend.onrender.com/auth/register',
+            `${process.env.NEXT_PUBLIC_API_URL}/auth/register`,
             {
               email: session.user.email,
               username: session.user.name,

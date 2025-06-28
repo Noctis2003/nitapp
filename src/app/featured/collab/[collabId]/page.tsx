@@ -83,6 +83,9 @@ if (response.status === 200) {
       setErrorMessage("An unexpected error occurred.");
     }
   }
+  finally {
+    setOpen(false);
+  }
 
 
 
@@ -94,7 +97,7 @@ if (response.status === 200) {
     const fetchCollab = async () => {
       try {
         const response = await axios.get(
-          `https://nitappbackend.onrender.com/collab/collabs/?id=${collabId}`,
+          `${process.env.NEXT_PUBLIC_API_URL}/collab/collabs/?id=${collabId}`,
           { withCredentials: true }
         );
         setCollab(response.data);

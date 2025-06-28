@@ -8,7 +8,9 @@ const poppins = Poppins({
 });
 
 export default function ProductCard({name, price, description , image}: {name: string, price: string, description: string, image: string}) {
- const transformedImage = image.replace('/upload/', '/upload/w_250,h_180,c_fill,q_auto:best/');
+if(image){
+  const transformedImage = image.replace('/upload/', '/upload/w_250,h_180,c_fill,q_auto:best/');
+
   return (
     
     <div
@@ -31,4 +33,5 @@ export default function ProductCard({name, price, description , image}: {name: s
      
     </div>
   );
+}
 }

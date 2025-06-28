@@ -28,7 +28,7 @@ export default function CollabListPage() {
     const fetchCollabs = async () => {
       try {
         setLoading(true);
-        const response = await axios.get("https://nitappbackend.onrender.com/collab/get", {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/collab/get`, {
           withCredentials: true,
           params: { scope: localOnly },
         });

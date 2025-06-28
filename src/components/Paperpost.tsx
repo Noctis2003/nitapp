@@ -6,7 +6,6 @@ import Link from "next/link";
 import axios from 'axios';
 import { useEffect } from "react";
 
-
 function Paperpost({id , name, description, comments, likes,title}:{id:string , name: string, description: string, date: string, comments: number, likes: number, title: string}) {
   const [likesCount, setLikesCount] = React.useState(likes);
   const [liked, setLiked] = React.useState(false);
@@ -16,7 +15,7 @@ function Paperpost({id , name, description, comments, likes,title}:{id:string , 
     const checkIfLiked = async () => {
       try {
         const response = await axios.post(
-          `https://nitappbackend.onrender.com/forum/liked`,
+          `${process.env.NEXT_PUBLIC_API_URL}/forum/liked`,
           { postId: Number(id) }, // body
           { withCredentials: true } // config
         );
@@ -30,12 +29,12 @@ function Paperpost({id , name, description, comments, likes,title}:{id:string , 
   }, [id]);
 
   const like = async () => {
-    // Trigger animation
+    
     setIsAnimating(true);
     setTimeout(() => setIsAnimating(false), 600);
     
     try {
-      const response = await axios.post(`https://nitappbackend.onrender.com/forum/like`, {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/forum/like`, {
         postId: Number(id),
       }, { withCredentials: true });
     

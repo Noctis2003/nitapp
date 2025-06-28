@@ -4,6 +4,7 @@ import { ChevronDown, ChevronUp, Trash2, User, Mail, Briefcase, Megaphone, FileT
 import axios from 'axios';
 import { Send } from 'lucide-react'
 import {  formatDistanceToNow } from "date-fns";
+import poppins from '@/styles/font';
 
 export type Role = {
   id: number;
@@ -87,7 +88,7 @@ function ProfilePage() {
     const fetchUserData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get("https://nitappbackend.onrender.com/user/all", {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/user/all`, {
           withCredentials: true,
         });
 
@@ -95,6 +96,9 @@ function ProfilePage() {
         console.log("The data is", data);
       } catch (error) {
         console.error("Error fetching user data:", error);
+      }
+      finally {
+        setLoading(false);
       }
     };
 
@@ -105,6 +109,7 @@ function ProfilePage() {
 
 
   useEffect(() => {
+   
     if (data) {
       console.log("Data is now available:", data);
       setGigs(data.collabGigs || []);
@@ -147,7 +152,7 @@ function ProfilePage() {
   const deleteGig = async (id: number) => {
     console.log("Deleting gig with id:", id);
     setGigs(prev => prev.filter(gig => gig.id !== id));
-    const response = await axios.delete(`https://nitappbackend.onrender.com/collab/collab?id=${id}`, {
+    const response = await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/collab/collab?id=${id}`, {
       withCredentials: true
     }
     )
@@ -156,7 +161,7 @@ function ProfilePage() {
 
   const deleteAd = async (id: number) => {
     setAds(prev => prev.filter(ad => ad.id !== id));
-    await axios.delete(`https://nitappbackend.onrender.com/shop/delete?id=${id}`, {
+    await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/shop/delete?id=${id}`, {
       withCredentials: true
     }
     )
@@ -164,7 +169,7 @@ function ProfilePage() {
 
   const deletePost = async (id: number) => {
     setPosts(prev => prev.filter(post => post.id !== id));
-    const response = await axios.delete(`https://nitappbackend.onrender.com/forum/delete?id=${id}`, {
+    const response = await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/forum/delete?id=${id}`, {
       withCredentials: true
     }
     )
@@ -174,7 +179,7 @@ function ProfilePage() {
   const deleteComment = async (id: number) => {
     setComments(prev => prev.filter(comment => comment.id !== id));
     try {
-      const response = await axios.delete(`https://nitappbackend.onrender.com/forum/comment/delete?id=${id}`, {
+      const response = await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/forum/comment/delete?id=${id}`, {
         withCredentials: true
       });
       console.log("Comment deletion response:", response);
@@ -186,7 +191,7 @@ function ProfilePage() {
   const deleteApplication = async (id: number) => {
     setApplications(prev => prev.filter(comment => comment.id !== id));
     try {
-      const response = await axios.delete(`https://nitappbackend.onrender.com/collab/collab?id=${id}`, {
+      const response = await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/collab/collab?id=${id}`, {
         withCredentials: true
       });
       console.log("Comment deletion response:", response);
@@ -225,9 +230,26 @@ function ProfilePage() {
     const allApplications = extractApplications(gigs);
     setApplications(allApplications);
     console.log("Extracted applications:", allApplications);
-    setLoading(false);
+    console.log(comments)
 
   }, [gigs])
+
+if (loading) {
+    return (
+      <div className={`min-h-screen bg-gray-950 text-white flex items-center justify-center w-full ${poppins.className}`}>
+        <div className="flex flex-col items-center space-y-6">
+          <div className="relative">
+            <div className="w-16 h-16 border-4 border-gray-800 border-t-cyan-500 rounded-full animate-spin"></div>
+            <div className="absolute inset-0 w-16 h-16 border-4 border-transparent border-t-cyan-400 rounded-full animate-spin animation-delay-150"></div>
+          </div>
+          <div className="text-center">
+            <h3 className="text-xl font-semibold text-cyan-400 mb-2">Loading your profile</h3>
+            <p className="text-gray-400">Finding stuff</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
 

@@ -8,7 +8,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(new URL('/login', request.url));
   }
 
-  const res = await fetch("https://nitappbackend.onrender.com/auth/refresh", {
+  const res = await fetch(` ${process.env.NEXT_PUBLIC_API_URL}/auth/refresh`, {
     method: "GET",
     headers: {
       'cookie': `refresh_token=${refreshToken}`,

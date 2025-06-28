@@ -82,7 +82,7 @@ function Sellbutton() {
       
       // Send data to API
      const response = await axios.post(
-        "https://nitappbackend.onrender.com/shop/create",
+        `${process.env.NEXT_PUBLIC_API_URL}/shop/create`,
         productData,
         { withCredentials: true } // Include credentials for authentication
       );

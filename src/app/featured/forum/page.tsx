@@ -1,10 +1,10 @@
 "use client"; // ⭐ VERY IMPORTANT ⭐
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Poppins } from "next/font/google";
 import Paperpost from "@/components/Paperpost";
 import Forumbutton from "@/components/Forumbutton";
-import axios from "axios";
+import usePostStore from "@/store/usePostStore";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -24,30 +24,31 @@ export type Post = {
 };
 
 const Page = () => {
-  const [posts, setPosts] = useState<Post[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  
+    const { posts, loading, error, fetchPosts } = usePostStore();
 
   useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const response = await axios.get(
-          "https://nitappbackend.onrender.com/forum/get",
-          {
-            withCredentials: true,
-          }
-        );
-        setPosts(response.data.data);
-      } catch (err) {
-        setError("Failed to fetch posts.");
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchPosts();
+   fetchPosts();
+   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+
+   if (loading) {
+    return (
+      <div className={`min-h-screen bg-gray-950 text-white flex items-center justify-center w-full ${poppins.className}`}>
+        <div className="flex flex-col items-center space-y-6">
+          <div className="relative">
+            <div className="w-16 h-16 border-4 border-gray-800 border-t-purple-400 rounded-full animate-spin"></div>
+            <div className="absolute inset-0 w-16 h-16 border-4 border-transparent border-t-purple-400 rounded-full animate-spin animation-delay-150"></div>
+          </div>
+          <div className="text-center">
+            <h3 className="text-xl font-semibold text-purple-400 mb-2">Finding top feeds</h3>
+            <p className="text-gray-400">Thanks for being patient</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div

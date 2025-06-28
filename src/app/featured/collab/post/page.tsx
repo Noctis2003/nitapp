@@ -47,11 +47,11 @@ export default function EpicIdeaForm() {
     console.log("🚀 Form submitted:", data);
 
     try {
-      const domain = await axios.get("https://nitappbackend.onrender.com/auth/email", {
+      const domain = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/auth/email`, {
         withCredentials: true,
       });
       const response = await axios.post(
-        "https://nitappbackend.onrender.com/collab/create",
+        `${process.env.NEXT_PUBLIC_API_URL}/collab/create`,
         {
           name: data.name,
           description: data.description,
