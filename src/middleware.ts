@@ -4,10 +4,7 @@ export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const jwt = request.cookies.get("jwt")?.value;
   const refreshToken = request.cookies.get("refresh_token")?.value;
-
-  console.log("JWT:", jwt);
-  console.log("Refresh Token:", refreshToken);
-
+  
   // Redirect root path to featured if logged in
   if (pathname === "/" && jwt) {
     return NextResponse.redirect(new URL("/featured/collab", request.url));

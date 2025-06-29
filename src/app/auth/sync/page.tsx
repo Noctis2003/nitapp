@@ -1,7 +1,7 @@
 "use client";
 // here the useSession hook is used to get the session data
 // and the actual loggin and registration is handled by the backend in here
-
+// thisbis
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
@@ -31,7 +31,7 @@ export default function SyncPage() {
 
         if (existingUser.data) {
           const response = await axios.post(
-            `${process.env.NEXT_PUBLIC_API_URL}/auth/login`,
+            '/api/login',
             { email },
             {
               withCredentials: true,
@@ -45,7 +45,7 @@ export default function SyncPage() {
 
         } else {
           await axios.post(
-            `${process.env.NEXT_PUBLIC_API_URL}/auth/register`,
+            `/api/register`,
             {
               email: session.user.email,
               username: session.user.name,
