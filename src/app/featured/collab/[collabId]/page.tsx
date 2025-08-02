@@ -2,11 +2,11 @@
 import { useState, useEffect } from "react";
 import axios from 'axios';
 
-import { Poppins } from "next/font/google";
-import {z} from "zod";
+import { Poppins } from "next/font/google"; // i have imported this font in every file i know its wrong 
+// but i am too lazy to fix it right now
+import {z} from "zod"; // i have imported zod 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-;
 import { useParams } from "next/navigation";
 
 const poppins = Poppins({ subsets: ["latin"], weight: ["300", "400", "500", "600", "700", "800"] });
@@ -57,7 +57,7 @@ const onsubmit = async (data: Formdata) => {
 
 
   try {
-    const response = await axios.post(`https://nitappbackend.onrender.com/collab/apply/`,
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/collab/apply/`,
   {
     message: data.message,
     roleId: roleId,

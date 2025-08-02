@@ -49,6 +49,7 @@ export type MarketplaceProduct = {
   image: string;
   createdAt: string;
   userId: number;
+  publicId: string; // Add publicId for Cloudinary
 };
 
 export type User = {
@@ -93,7 +94,7 @@ function ProfilePage() {
         });
 
         setData(response.data);
-        console.log("The data is", data);
+
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
@@ -111,7 +112,7 @@ function ProfilePage() {
   useEffect(() => {
    
     if (data) {
-      console.log("Data is now available:", data);
+      console.log("User data:", data);
       setGigs(data.collabGigs || []);
       setAds(data.marketplaceProducts || []);
       setPosts(data.forumPosts || []);
@@ -150,53 +151,61 @@ function ProfilePage() {
   };
 
   const deleteGig = async (id: number) => {
-    console.log("Deleting gig with id:", id);
+
     setGigs(prev => prev.filter(gig => gig.id !== id));
-    const response = await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/collab/collab?id=${id}`, {
+   await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/collab/collab?id=${id}`, {
       withCredentials: true
     }
     )
-    console.log("the response is", response);
+
   };
 
-  const deleteAd = async (id: number) => {
+  const deleteAd = async (id: number, publicId: string) => {
     setAds(prev => prev.filter(ad => ad.id !== id));
     await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/shop/delete?id=${id}`, {
       withCredentials: true
     }
     )
+    const res = await fetch("/api/delete", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ public_id: publicId })
+    });
+    const data = await res.json();
+    console.log("Image deleted from Cloudinary:", data);
   };
 
   const deletePost = async (id: number) => {
     setPosts(prev => prev.filter(post => post.id !== id));
-    const response = await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/forum/delete?id=${id}`, {
+    await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/forum/delete?id=${id}`, {
       withCredentials: true
-    }
-    )
-    console.log("the response is", response);
+    });
+
   };
 
   const deleteComment = async (id: number) => {
     setComments(prev => prev.filter(comment => comment.id !== id));
     try {
-      const response = await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/forum/comment/delete?id=${id}`, {
+      await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/forum/comment/delete?id=${id}`, {
         withCredentials: true
       });
-      console.log("Comment deletion response:", response);
+    
     } catch (error) {
-      console.error("Error deleting comment:", error);
+console.error("Error deleting comment:", error);
     }
   };
 
   const deleteApplication = async (id: number) => {
     setApplications(prev => prev.filter(comment => comment.id !== id));
     try {
-      const response = await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/collab/collab?id=${id}`, {
+     await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/collab/collab?id=${id}`, {
         withCredentials: true
       });
-      console.log("Comment deletion response:", response);
+
     } catch (error) {
-      console.error("Error deleting comment:", error);
+   console.error("Error deleting application:", error);
     }
   };
 
@@ -226,11 +235,11 @@ function ProfilePage() {
 
   useEffect(() => {
 
-    console.log("Gigs:", gigs);
+   
     const allApplications = extractApplications(gigs);
-    setApplications(allApplications);
     console.log("Extracted applications:", allApplications);
-    console.log(comments)
+    setApplications(allApplications);
+  
 
   }, [gigs])
 
@@ -367,7 +376,7 @@ if (loading) {
                         </div>
                       </div>
                       <button
-                        onClick={() => deleteAd(ad.id)}
+                        onClick={() => deleteAd(ad.id, ad.publicId)}
                         className="p-2 text-red-400 hover:text-red-300 hover:bg-red-400/10 rounded-lg transition-colors self-end sm:self-center"
                         title="Delete ad"
                       >
@@ -501,7 +510,7 @@ if (loading) {
                       <div className="flex-1 min-w-0">
                         <p className="text-sm sm:text-base text-white mb-2 break-words">{app.message}</p>
                         <div className="flex flex-col sm:flex-row sm:items-center space-y-1 sm:space-y-0 sm:space-x-6 text-xs sm:text-sm">
-                          <span className="text-gray-300">Post ID: <span className="text-blue-400">{app.postId}</span></span>
+                          <span className="text-gray-300">Gig Name: <span className="text-blue-400">{app.gigName}</span></span>
                           <span className="text-gray-300">Created: <span className="text-gray-400">{formatDistanceToNow(new Date(app.createdAt))} ago</span></span>
                         </div>
                       </div>

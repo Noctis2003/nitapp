@@ -73,6 +73,8 @@ function GraffitiLayer() {
 }
 
 export default function ToiletWall() {
+  
+
   const [showTextbox, setShowTextbox] = useState(false);
   // Initialize notes as an empty array instead of undefined
   const [notes, setNotes] = useState<Note[]>([]);
@@ -118,7 +120,7 @@ export default function ToiletWall() {
           withCredentials: true,
           headers: { "Content-Type": "application/json" },
         });
-        console.log("Fetched notes:", res.data.data);
+     
         
         // Ensure we always set an array, even if API returns null/undefined
         const fetchedNotes = Array.isArray(res.data.data) ? res.data.data : [];
@@ -230,6 +232,7 @@ export default function ToiletWall() {
       </div>
     );
   }
+  
 
 
   return (

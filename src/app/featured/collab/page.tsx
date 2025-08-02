@@ -32,15 +32,15 @@ export default function CollabListPage() {
           withCredentials: true,
           params: { scope: localOnly },
         });
-        console.log("Collabs:", response);
+   
         setCollabs(response.data);
       } catch (error) {
-        console.error("❌ Failed to load collabs:", error);
+      console.error("Error fetching collaborations:", error);
       } finally {
         setLoading(false);
       }
     };
-    console.log(localOnly);
+  
     fetchCollabs();
   }, [localOnly]);
 

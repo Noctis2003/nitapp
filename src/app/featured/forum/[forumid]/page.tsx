@@ -40,9 +40,9 @@ type ForumData = {
 
   const onsubmit = async (data: FormData) => {
     
-    console.log(data);
+
     setSubmitted(true);
-    const response = await axios.post(
+     await axios.post(
       `${process.env.NEXT_PUBLIC_API_URL}/forum/comment`,
       {
         postId: Number(forumid),
@@ -54,7 +54,7 @@ type ForumData = {
     setSubmitted(false);
     
     setOpen(false);
-    console.log(response.data);
+   
   }
 
   type FormData = z.infer<typeof formSchema>;
@@ -106,7 +106,7 @@ type ForumData = {
         console.error('Error fetching comments:', error);
       }
     }
-    console.log(comments.length);
+
 
     const execute = async () => {
       try {

@@ -1,6 +1,6 @@
 "use client";
 import "./globals.css";
-import { AuthProvider } from "@/lib/auth";
+
 
 
 export default function RootLayout({
@@ -13,7 +13,7 @@ export default function RootLayout({
       <body
         className= "antialiased"
       >
-         <AuthProvider>{children}</AuthProvider>
+        {children}
       </body>
     </html>
   );

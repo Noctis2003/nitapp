@@ -15,7 +15,7 @@ const formSchema = z.object({
     .string()
     .min(50, "The description must be at least 50 characters"),
   roles: z
-    .array(z.string().max(20, "Role must be 20 characters or less"))
+    .array(z.string().max(50, "Role must be 50 characters or less"))
     .min(1, "At least one role is required"),
 });
 

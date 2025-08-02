@@ -4,7 +4,7 @@ import { Poppins } from "next/font/google";
 import Sellbutton from "@/components/Sellbutton";
 import axios from "axios";
 import ProductCard from "@/components/ProductCard";
-
+// this is how you make it.
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -17,6 +17,7 @@ export type Product = {
   price: number;
   description: string;
   image: string;
+  phone?: string; // Optional field for phone number
 };
 
 export default function Page() {
@@ -68,17 +69,19 @@ export default function Page() {
         <Sellbutton />
       </h1>
       <div
-        className={`flex flex-grow flex-wrap xxs:flex-col md:flex-row ${
-          products.length === 1 ? "md:justify-start" : "md:justify-evenly"
-        }`}
+        className={`w-full max-md:mx-auto grid grid-cols-1 gap-4 md:grid-cols-3  md:mx-5`}
       >
+      
+
+
         {products.map((product: Product) => (
           <ProductCard
             key={product.id}
             name={product.name}
             price={`₹${product.price}`}
-            description={product.description.length>100 ? product.description.substring(0, 40) + "..." : product.description}
+            description={product.description}
             image={product.image}
+            phone={product.phone}
           />
         ))}
       </div>

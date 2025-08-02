@@ -30,7 +30,7 @@ export default function RootLayout({
       method: "POST",
       credentials: "include", // <== VERY IMPORTANT for sending cookies
     });
-    console.log("Logged out successfully");
+   
     router.push("/"); // Navigate after logout
   };
 

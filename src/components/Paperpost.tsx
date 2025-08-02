@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { ThumbsUp } from 'lucide-react';
+import { Heart } from 'lucide-react';
 import { MessageCircle } from 'lucide-react';
 import Link from "next/link";
 import axios from 'axios';
@@ -29,7 +29,13 @@ function Paperpost({id , name, description, comments, likes,title}:{id:string , 
   }, [id]);
 
   const like = async () => {
+    // Optimistic UI update
+    const wasLiked = liked;
+    const previousCount = likesCount;
     
+    // Update UI immediately
+    setLiked(!liked);
+    setLikesCount(liked ? likesCount - 1 : likesCount + 1);
     setIsAnimating(true);
     setTimeout(() => setIsAnimating(false), 600);
     
@@ -38,18 +44,20 @@ function Paperpost({id , name, description, comments, likes,title}:{id:string , 
         postId: Number(id),
       }, { withCredentials: true });
     
-      if(response.data.message === "Post unliked successfully" && likesCount > 0) {
-        setLiked(false);
+      // Verify the response matches our optimistic update
+      if(response.data.message === "Post unliked successfully") {
         console.log(response.data.message);
-        setLikesCount(likesCount - 1);
+        // UI already updated optimistically
       }
       else if(response.data.message === "Post liked successfully") {
         console.log(response.data.message);
-        setLiked(true);
-        setLikesCount(likesCount + 1);
+        // UI already updated optimistically
       }
     } catch (error) {
       console.error("Error liking post:", error);
+      // Revert optimistic update on error
+      setLiked(wasLiked);
+      setLikesCount(previousCount);
     }
   }
 
@@ -79,39 +87,50 @@ function Paperpost({id , name, description, comments, likes,title}:{id:string , 
             <span className="font-medium">{comments}</span>
           </div>
          
-          {/* Enhanced Like Button */}
+          {/* Enhanced Like Button with Better Feedback */}
           <div className="flex flex-row gap-2 items-center justify-center">
             <button 
               onClick={like}
               className={`
-                relative p-1 rounded-full transition-all duration-200 ease-in-out
-                hover:bg-gray-800 active:scale-95
-                ${isAnimating ? 'animate-pulse' : ''}
+                relative p-1.5 rounded-full transition-all duration-300 ease-out
+                hover:bg-gray-800/50 active:scale-90 active:bg-gray-700/70
+                ${liked ? 'hover:bg-red-900/20' : 'hover:bg-gray-800/50'}
+                ${isAnimating ? 'animate-pulse scale-110' : 'scale-100'}
+                focus:outline-none focus:ring-2 focus:ring-red-500/30 focus:ring-offset-1 focus:ring-offset-gray-900
               `}
+              disabled={isAnimating}
             >
-              <ThumbsUp
+              <Heart
                 className={`
-                  w-4 h-4 transition-all duration-300 ease-in-out
-                  ${liked ? 'scale-110' : 'scale-100'}
+                  w-4 h-4 transition-all duration-300 ease-out
+                  ${liked ? 'scale-110 rotate-12' : 'scale-100 rotate-0'}
                   ${isAnimating ? 'animate-bounce' : ''}
                 `}
                 color={liked ? "#ef4444" : "#94a3b8"}
                 fill={liked ? "#ef4444" : "none"}
-                strokeWidth={1.5}
+                strokeWidth={liked ? 2 : 1.5}
               />
-              {/* Animated heart particles effect */}
+              
+              {/* Enhanced particle effects */}
               {isAnimating && liked && (
                 <>
-                  <div className="absolute -top-2 -right-1 w-2 h-2 bg-cyan-400 rounded-full animate-ping opacity-75"></div>
-                  <div className="absolute -top-1 -left-1 w-1 h-1 bg-cyan-300 rounded-full animate-ping animation-delay-150 opacity-60"></div>
-                  <div className="absolute -bottom-1 right-0 w-1.5 h-1.5 bg-cyan-500 rounded-full animate-ping animation-delay-300 opacity-50"></div>
+                  <div className="absolute -top-1 -right-1 w-1.5 h-1.5 bg-red-400 rounded-full animate-ping opacity-80"></div>
+                  <div className="absolute -top-2 left-0 w-1 h-1 bg-red-300 rounded-full animate-ping animation-delay-100 opacity-60"></div>
+                  <div className="absolute -bottom-1 -right-0.5 w-1 h-1 bg-red-500 rounded-full animate-ping animation-delay-200 opacity-50"></div>
+                  <div className="absolute top-0 -left-1 w-0.5 h-0.5 bg-red-400 rounded-full animate-ping animation-delay-300 opacity-40"></div>
                 </>
               )}
+              
+              {/* Ripple effect on click */}
+              {isAnimating && (
+                <div className="absolute inset-0 rounded-full border border-red-400/30 animate-ping"></div>
+              )}
             </button>
+            
             <span 
               className={`
-                font-medium transition-all duration-300
-                ${liked ? 'text-red-400 scale-105' : 'text-gray-400'}
+                font-medium transition-all duration-300 ease-out select-none
+                ${liked ? 'text-red-400 scale-105 font-semibold' : 'text-gray-400'}
                 ${isAnimating ? 'animate-pulse' : ''}
               `}
             >

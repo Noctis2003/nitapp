@@ -6,7 +6,9 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Poppins } from "next/font/google";
 import axios from 'axios'; // Adjust the import path as necessary
-
+import {v4 as uuidv4} from 'uuid'; 
+import imageCompression from "browser-image-compression";
+// Adjust the import path as necessary
 const poppins = Poppins({
   subsets: ["latin"],
   weight: ["400", "500", "700"],
@@ -14,9 +16,13 @@ const poppins = Poppins({
 
 const formSchema = z.object({
   productName: z.string().min(1, "Product name is required"),
-  productDescription: z.string().min(1, "Description is required"),
+  productDescription: z.string().min(1, "Description is required").max(200, "Description must be less than 200 characters"),
   productPrice: z.string().min(1, "Price is required"),
   productImage: z.instanceof(File),
+  productPhone: z
+  .string()
+  .regex(/^\d{10}$/, "Phone number must be exactly 10 digits")
+  
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -39,23 +45,55 @@ function Sellbutton() {
   async function uploadToCloudinary(file: File) {
     try {
       const formData = new FormData();
-      formData.append("file", file);
-      formData.append("upload_preset", "noctis_unsigned"); 
-      
-      const res = await fetch(`https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`, {
+    
+     
+
+      const sign=await fetch('/api/cloudinary', {
         method: "POST",
-        body: formData,
+        body: JSON.stringify({
+          folder: "your_folder_name",
+          public_id: uuidv4()
+        }),
+        headers: {
+          "Content-Type": "application/json"
+        }
       });
-      
-      if (!res.ok) {
+
+      const { signature, timestamp , apiKey , cloudName , public_id} = await sign.json();
+      console.log(signature, timestamp, apiKey, cloudName, public_id);
+       const options = {
+      maxSizeMB: 0.3, // Max size in MB
+      maxWidthOrHeight: 1024, // Optional: resize
+      useWebWorker: true,
+    };
+
+    const compressedFile = await imageCompression(file, options);
+    console.log("Compressed file size:", compressedFile.size / 1024 / 1024, "MB");
+    formData.append("file", compressedFile);
+    formData.append('api_key', apiKey);
+     formData.append('timestamp', timestamp.toString());
+     formData.append('signature', signature);
+       
+     formData.append('public_id', public_id);
+       const uploadRes = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/upload`, {
+    method: 'POST',
+    body: formData,
+  });
+
+  const data = await uploadRes.json();
+
+      if (!uploadRes.ok) {
         throw new Error("Failed to upload image");
       }
       
-      const data = await res.json();
+      
       console.log(data.secure_url);
-      return data.secure_url;
+      return {
+        imageUrl: data.secure_url,
+        public_id
+      }
     } catch (error) {
-      console.error("Error uploading to Cloudinary:", error);
+      console.log("Error uploading to Cloudinary:", error);
       throw error;
     }
   }
@@ -65,19 +103,26 @@ function Sellbutton() {
       setIsSubmitting(true);
       setError(null);
       
-      let imageUrl = "";
+      
       
       // Upload image if provided
-      if (data.productImage) {
-        imageUrl = await uploadToCloudinary(data.productImage);
-      }
+     
+       const res = await uploadToCloudinary(data.productImage);
+      const { imageUrl , public_id } = res;
+
+      console.log("Image uploaded successfully:", imageUrl);
+      
+      // If no image is provided, use a placeholder or handle accordingly
+      console.log("public_id", public_id);
       
       // Prepare data for API
       const productData = {
         name: data.productName,
         description: data.productDescription,
         price: data.productPrice,
-        image: imageUrl
+        image: imageUrl,
+        phone: data.productPhone,
+        public_id
       };
       
       // Send data to API
@@ -140,6 +185,15 @@ function Sellbutton() {
                 placeholder="Enter price..."
               />
               {errors.productPrice && <p className="text-red-500 text-sm">{errors.productPrice.message}</p>}
+
+              <input
+                {...register("productPhone")}
+                type="text"
+                className="w-full text-sm mt-3 p-3 bg-transparent border border-gray-400 text-white rounded-lg focus:outline-none placeholder-gray-400"
+                placeholder="Enter phone number (10 digits)..."
+                maxLength={10}
+              />
+              {errors.productPhone && <p className="text-red-500 text-sm">{errors.productPhone.message}</p>}
 
               <div className="w-full">
                 <label className="block text-sm text-gray-300 mb-1">Product Image</label>
