@@ -253,7 +253,7 @@ if (loading) {
           </div>
           <div className="text-center">
             <h3 className="text-xl font-semibold text-cyan-400 mb-2">Loading your profile</h3>
-            <p className="text-gray-400">Finding stuff</p>
+            <p className="text-gray-400">People are strange when you're a stranger.</p>
           </div>
         </div>
       </div>

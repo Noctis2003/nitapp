@@ -86,8 +86,8 @@ export default function CollabListPage() {
             </div>
             
             <p className="text-gray-400 text-lg max-w-2xl mx-auto leading-relaxed">
-              These are the sparks waiting for the right minds to ignite them. 
-              Join forces and create something extraordinary.
+              “Direct a movie, build that video game, make the next big thing —
+             don’t just be another brick in the wall.”
             </p>
           </div>
 
