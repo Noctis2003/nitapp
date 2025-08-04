@@ -225,8 +225,8 @@ export default function ToiletWall() {
             <div className="absolute inset-0 w-16 h-16 border-4 border-transparent border-t-pink-400 rounded-full animate-spin animation-delay-150"></div>
           </div>
           <div className="text-center">
-            <h3 className="text-xl font-semibold text-pink-400 mb-2">Finding confessions</h3>
-            <p className="text-gray-400">Thanks for being patient</p>
+            <h3 className="text-xl font-semibold text-pink-400 mb-2">Lock the door and throw away the key...</h3>
+            <p className="text-gray-400">Thanks for being patient.</p>
           </div>
         </div>
       </div>
