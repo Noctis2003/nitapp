@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Poppins } from "next/font/google";
-import axios from 'axios'; // Adjust the import path as necessary
+import api from "@/lib/axios"; // Adjust the import path as necessary
 import {v4 as uuidv4} from 'uuid'; 
 import imageCompression from "browser-image-compression";
 // Adjust the import path as necessary
@@ -126,7 +126,7 @@ function Sellbutton() {
       };
       
       // Send data to API
-     const response = await axios.post(
+     const response = await api.post(
         `${process.env.NEXT_PUBLIC_API_URL}/shop/create`,
         productData,
         { withCredentials: true } // Include credentials for authentication

@@ -2,7 +2,8 @@
 import React, { useEffect, useState } from "react";
 import { Poppins } from "next/font/google";
 import Sellbutton from "@/components/Sellbutton";
-import axios from "axios";
+
+import api from "@/lib/axios"; // Adjust the import path as necessary
 import ProductCard from "@/components/ProductCard";
 // this is how you make it.
 
@@ -29,7 +30,7 @@ export default function Page() {
       
       try {
         setLoading(true);
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/shop/all`, {
+        const response = await api.get(`${process.env.NEXT_PUBLIC_API_URL}/shop/all`, {
           withCredentials: true,
         });
         setProducts(response.data);

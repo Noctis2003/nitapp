@@ -1,5 +1,6 @@
 import { create } from 'zustand';
-import axios from 'axios';
+
+import api from '@/lib/axios';
 
 export type Post = {
   id: string;
@@ -29,7 +30,7 @@ const usePostStore = create<PostState>((set) => ({
   fetchPosts: async () => {
     set({ loading: true, error: '' });
     try {
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/forum/get`, {
+      const response = await api.get(`${process.env.NEXT_PUBLIC_API_URL}/forum/get`, {
         withCredentials: true,
       });
       set({ posts: response.data.data, loading: false });

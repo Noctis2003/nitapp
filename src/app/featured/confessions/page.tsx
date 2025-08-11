@@ -11,7 +11,8 @@ import { useEffect, useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from 'axios';
+
+import api from "@/lib/axios"; // Adjust the import path as necessary
 import { Shadows_Into_Light } from "next/font/google";
 
 
@@ -25,7 +26,7 @@ const graffitiIcons = [
 ];
 
 const noteSchema = z.object({
-  content: z.string().min(5, "Please write something meaningful..."),
+  content: z.string().min(5, "Please write something meaningful...").max(150, "Content must be at most 150 characters."),
 });
 
 type NoteFormData = z.infer<typeof noteSchema>;
@@ -116,7 +117,7 @@ export default function ToiletWall() {
     const fetchNotes = async () => {
       try {
         setLoading(true);
-        const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/gossip/get`, {
+        const res = await api.get(`${process.env.NEXT_PUBLIC_API_URL}/gossip/get`, {
           withCredentials: true,
           headers: { "Content-Type": "application/json" },
         });
@@ -200,7 +201,7 @@ export default function ToiletWall() {
   const onSubmit = async (data: NoteFormData) => {
     try {
       setShowTextbox(false);
-     await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/gossip/create`, {
+      await api.post(`${process.env.NEXT_PUBLIC_API_URL}/gossip/create`, {
         content: data.content,
       }, {
         withCredentials: true,
@@ -297,7 +298,13 @@ export default function ToiletWall() {
 
       {showTextbox && (
         <div className="fixed inset-0 z-50 bg-black/60 flex items-center backdrop-blur-md justify-center">
-          <div className="bg-gray-900 border border-white/20 rounded-xl p-6 w-96 shadow-xl">
+          <div className="bg-gray-900 border border-white/20 rounded-xl p-6 w-96 shadow-xl relative">
+            <button
+              onClick={() => setShowTextbox(false)}
+              className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors"
+            >
+              ✕
+            </button>
             <form onSubmit={handleSubmit(onSubmit)}>
               <textarea
                 {...register("content")}

@@ -1,10 +1,10 @@
 // This page shows collabs in a beautiful, card-like layout
 "use client";
 import { useEffect, useState } from "react";
-import axios from 'axios';
+
 import { Poppins } from "next/font/google";
 import { useRouter } from "next/navigation";
-
+import api from "@/lib/axios";
 const poppins = Poppins({ subsets: ["latin"], weight: ["400", "500", "600", "700"] });
 
 interface User {
@@ -28,7 +28,7 @@ export default function CollabListPage() {
     const fetchCollabs = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/collab/get`, {
+        const response = await api.get(`${process.env.NEXT_PUBLIC_API_URL}/collab/get`, {
           withCredentials: true,
           params: { scope: localOnly },
         });

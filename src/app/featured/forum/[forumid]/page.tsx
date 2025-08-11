@@ -3,7 +3,8 @@ import React from 'react';
 import { Poppins } from 'next/font/google';
 import { useEffect } from 'react';
 import { useState } from 'react';
-import axios from 'axios'
+
+import api from '@/lib/axios'; // Adjust the import path as necessary
 import z from 'zod';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -42,7 +43,7 @@ type ForumData = {
     
 
     setSubmitted(true);
-     await axios.post(
+     await api.post(
       `${process.env.NEXT_PUBLIC_API_URL}/forum/comment`,
       {
         postId: Number(forumid),
@@ -82,8 +83,8 @@ type ForumData = {
   useEffect(() => {
     const fetchForumData = async () => {  
       try {
-        
-        const response = await axios.get(
+
+        const response = await api.get(
           `${process.env.NEXT_PUBLIC_API_URL}/forum/getsingle?id=${forumid}`,
           { withCredentials: true }
         );
@@ -96,7 +97,7 @@ type ForumData = {
 
     const fetchComments = async () => {
       try {
-        const response = await axios.get(
+        const response = await api.get(
           `${process.env.NEXT_PUBLIC_API_URL}/forum/comments?postId=${forumid}`,
           { withCredentials: true }
         );

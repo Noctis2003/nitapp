@@ -6,6 +6,7 @@ import Paperpost from "@/components/Paperpost";
 import Forumbutton from "@/components/Forumbutton";
 import usePostStore from "@/store/usePostStore";
 
+
 const poppins = Poppins({
   subsets: ["latin"],
   weight: ["400", "500", "700"],

@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import axios from 'axios';
+import api from "@/lib/axios"; // Adjust the import path as necessary
 
 import { Poppins } from "next/font/google"; // i have imported this font in every file i know its wrong 
 // but i am too lazy to fix it right now
@@ -57,7 +58,7 @@ const onsubmit = async (data: Formdata) => {
 
 
   try {
-    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/collab/apply/`,
+    const response = await api.post(`${process.env.NEXT_PUBLIC_API_URL}/collab/apply/`,
   {
     message: data.message,
     roleId: roleId,
@@ -96,7 +97,7 @@ if (response.status === 200) {
   useEffect(() => {
     const fetchCollab = async () => {
       try {
-        const response = await axios.get(
+        const response = await api.get(
           `${process.env.NEXT_PUBLIC_API_URL}/collab/collabs/?id=${collabId}`,
           { withCredentials: true }
         );

@@ -3,7 +3,8 @@ import React from "react";
 import { Heart } from 'lucide-react';
 import { MessageCircle } from 'lucide-react';
 import Link from "next/link";
-import axios from 'axios';
+
+import api from "@/lib/axios";
 import { useEffect } from "react";
 
 function Paperpost({id , name, description, comments, likes,title}:{id:string , name: string, description: string, date: string, comments: number, likes: number, title: string}) {
@@ -14,7 +15,7 @@ function Paperpost({id , name, description, comments, likes,title}:{id:string , 
   useEffect(() => {
     const checkIfLiked = async () => {
       try {
-        const response = await axios.post(
+        const response = await api.post(
           `${process.env.NEXT_PUBLIC_API_URL}/forum/liked`,
           { postId: Number(id) }, // body
           { withCredentials: true } // config
@@ -40,7 +41,7 @@ function Paperpost({id , name, description, comments, likes,title}:{id:string , 
     setTimeout(() => setIsAnimating(false), 600);
     
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/forum/like`, {
+      const response = await api.post(`${process.env.NEXT_PUBLIC_API_URL}/forum/like`, {
         postId: Number(id),
       }, { withCredentials: true });
     

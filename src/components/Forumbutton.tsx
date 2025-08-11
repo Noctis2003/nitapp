@@ -3,11 +3,12 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from 'axios';
+
+import api from "@/lib/axios";
 import usePostStore from "@/store/usePostStore";
 import { add } from "date-fns";
 const formSchema = z.object({
-  title: z.string().min(1, "Title is required"),
+  title: z.string().min(1, "Title is required").max(100, "Title must be at most 100 characters"),
   description: z.string().min(1, "Description is required"),
 });
 
@@ -35,7 +36,7 @@ const { addPost } = usePostStore(); // Import the addPost function from the stor
       setIsSubmitting(true);
       setErrorMsg("");
       
-      const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/forum/create`, data, {
+      const res = await api.post(`${process.env.NEXT_PUBLIC_API_URL}/forum/create`, data, {
         headers: {
           "Content-Type": "application/json",
         },

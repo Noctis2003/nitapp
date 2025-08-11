@@ -1,10 +1,11 @@
 "use client";
 import React, { useEffect, useState } from 'react';
 import { ChevronDown, ChevronUp, Trash2, User, Mail, Briefcase, Megaphone, FileText, MessageCircle } from 'lucide-react';
-import axios from 'axios';
+
 import { Send } from 'lucide-react'
 import {  formatDistanceToNow } from "date-fns";
 import poppins from '@/styles/font';
+import api from "@/lib/axios"; // Adjust the import path as necessary
 
 export type Role = {
   id: number;
@@ -89,7 +90,7 @@ function ProfilePage() {
     const fetchUserData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/user/all`, {
+        const response = await api.get(`${process.env.NEXT_PUBLIC_API_URL}/user/all`, {
           withCredentials: true,
         });
 
@@ -153,7 +154,7 @@ function ProfilePage() {
   const deleteGig = async (id: number) => {
 
     setGigs(prev => prev.filter(gig => gig.id !== id));
-   await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/collab/collab?id=${id}`, {
+   await api.delete(`${process.env.NEXT_PUBLIC_API_URL}/collab/collab?id=${id}`, {
       withCredentials: true
     }
     )
@@ -162,7 +163,7 @@ function ProfilePage() {
 
   const deleteAd = async (id: number, publicId: string) => {
     setAds(prev => prev.filter(ad => ad.id !== id));
-    await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/shop/delete?id=${id}`, {
+    await api.delete(`${process.env.NEXT_PUBLIC_API_URL}/shop/delete?id=${id}`, {
       withCredentials: true
     }
     )
@@ -179,7 +180,7 @@ function ProfilePage() {
 
   const deletePost = async (id: number) => {
     setPosts(prev => prev.filter(post => post.id !== id));
-    await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/forum/delete?id=${id}`, {
+    await api.delete(`${process.env.NEXT_PUBLIC_API_URL}/forum/delete?id=${id}`, {
       withCredentials: true
     });
 
@@ -188,7 +189,7 @@ function ProfilePage() {
   const deleteComment = async (id: number) => {
     setComments(prev => prev.filter(comment => comment.id !== id));
     try {
-      await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/forum/comment/delete?id=${id}`, {
+      await api.delete(`${process.env.NEXT_PUBLIC_API_URL}/forum/comment/delete?id=${id}`, {
         withCredentials: true
       });
     
@@ -200,7 +201,7 @@ console.error("Error deleting comment:", error);
   const deleteApplication = async (id: number) => {
     setApplications(prev => prev.filter(comment => comment.id !== id));
     try {
-     await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/collab/collab?id=${id}`, {
+     await api.delete(`${process.env.NEXT_PUBLIC_API_URL}/collab/collab?id=${id}`, {
         withCredentials: true
       });
 

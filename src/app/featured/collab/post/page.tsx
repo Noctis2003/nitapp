@@ -6,6 +6,7 @@ import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import axios from "axios";
+import api from "@/lib/axios"; // Adjust the import path as necessary
 import { useRouter } from "next/navigation";
 const poppins = Poppins({ subsets: ["latin"], weight: "400" });
 
@@ -47,10 +48,10 @@ export default function EpicIdeaForm() {
     console.log("🚀 Form submitted:", data);
 
     try {
-      const domain = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/auth/email`, {
+      const domain = await api.get(`${process.env.NEXT_PUBLIC_API_URL}/auth/email`, {
         withCredentials: true,
       });
-      const response = await axios.post(
+      const response = await api.post(
         `${process.env.NEXT_PUBLIC_API_URL}/collab/create`,
         {
           name: data.name,
